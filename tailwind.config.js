@@ -4,14 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#1A1D21',
-        paper: '#F7F8F8',
-        clay: '#1F3A5C',
-        slate: '#48525C',
-        line: '#E1E4E6'
+        ink: '#1A1A1A',
+        paper: '#FAFAF9',
+        clay: '#D4A017',
+        slate: '#9CA3AF',
+        line: '#E5E7EB'
       },
       fontFamily: {
         display: ['"Fraunces"', 'serif'],
+        displayAr: ['"Marhey"', 'sans-serif'],
         body: ['"Inter"', 'sans-serif']
       }
     }

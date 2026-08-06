@@ -5,6 +5,7 @@ const translations = {
     appName: 'Al Qusor',
     heroTitle: 'Furniture, made to fit your home',
     heroSubtitle: 'Browse our collection — tap any piece to see photos, colors, and pricing.',
+    shopNow: 'Shop Now',
     allCategories: 'All',
     viewDetails: 'View details',
     noStoreProducts: 'No products to show yet.',
@@ -41,7 +42,7 @@ const translations = {
     scanToView: 'Customers can scan this to view the product.',
     print: 'Print QR code',
     doneAddAnother: 'Add another product',
-    sar: 'SAR',
+    sar: '﷼',
     detailsUnavailable: 'This product could not be found.',
     downloadPhoto: 'Download photo',
     downloadAllPhotos: 'Download all photos'
@@ -50,6 +51,7 @@ const translations = {
     appName: 'القصور',
     heroTitle: 'أثاث يناسب منزلك',
     heroSubtitle: 'تصفح مجموعتنا — اضغط على أي قطعة لعرض الصور والألوان والأسعار.',
+    shopNow: 'تسوق الآن',
     allCategories: 'الكل',
     viewDetails: 'عرض التفاصيل',
     noStoreProducts: 'لا توجد منتجات لعرضها بعد.',
@@ -86,7 +88,7 @@ const translations = {
     scanToView: 'يمكن للعملاء مسح هذا الرمز لعرض المنتج.',
     print: 'طباعة رمز QR',
     doneAddAnother: 'إضافة منتج آخر',
-    sar: 'ر.س',
+    sar: '﷼',
     detailsUnavailable: 'تعذر العثور على هذا المنتج.',
     downloadPhoto: 'تحميل الصورة',
     downloadAllPhotos: 'تحميل جميع الصور'
