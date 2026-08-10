@@ -3,7 +3,7 @@ import axios from "axios";
 // Centralized axios instance. `withCredentials` lets the httpOnly auth
 // cookie set by the backend travel with every request.
 const api = axios.create({
-  baseURL: "https://al-qusor-back-end.onrender.com/api",
+  baseURL: "/api",
   withCredentials: true,
 });
 
