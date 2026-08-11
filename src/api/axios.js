@@ -3,7 +3,7 @@ import axios from "axios";
 // Centralized axios instance. `withCredentials` lets the httpOnly auth
 // cookie set by the backend travel with every request.
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: import.meta.env.VITE_API_URL || "/api",
   withCredentials: true,
 });
 
