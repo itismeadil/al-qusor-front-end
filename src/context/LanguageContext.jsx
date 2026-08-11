@@ -1,19 +1,19 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import translations from '../i18n/translations';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import translations from "../i18n/translations";
 
 const LanguageContext = createContext(null);
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState(() => localStorage.getItem('lang') || 'en');
+  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "ar");
 
   useEffect(() => {
-    localStorage.setItem('lang', lang);
+    localStorage.setItem("lang", lang);
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   }, [lang]);
 
   const t = (key) => translations[lang]?.[key] ?? translations.en[key] ?? key;
-  const toggleLang = () => setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+  const toggleLang = () => setLang((prev) => (prev === "en" ? "ar" : "en"));
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, toggleLang, t }}>

@@ -74,7 +74,7 @@ const translations = {
     signInSubtitle: "سجّل الدخول لإدارة كتالوج منتجاتك.",
     noSignupNote:
       "يتم إنشاء الحسابات من قبل صاحب المتجر مباشرة — لا يوجد تسجيل ذاتي.",
-    products: "المنتجات",
+    theCollection: "المجموعة",
     productsSubtitle: "كل رمز استجابة سريعة يشير إلى صفحة أحد هذه المنتجات.",
     addProduct: "+ إضافة منتج",
     logOut: "تسجيل الخروج",
