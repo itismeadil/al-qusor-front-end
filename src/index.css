@@ -4,21 +4,15 @@
 
 @layer base {
   body {
-    @apply bg-paper;
+    @apply bg-ivory;
   }
-}
 
-/* Ticket/tag perforation — the recurring motif for cards that represent
-   a single product or a single login "pass" */
-.tag-edge {
-  position: relative;
-}
-.tag-edge::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -1px;
-  height: 1px;
-  background-image: repeating-linear-gradient(to right, #D3D6D8 0, #D3D6D8 6px, transparent 6px, transparent 12px);
+  /* Arabic gets its own type pairing — El Messiri for headings (echoes
+     Playfair's character), Tajawal for body (echoes Inter's clarity) */
+  html[lang="ar"] body {
+    font-family: "Tajawal", sans-serif;
+  }
+  html[lang="ar"] .font-display {
+    font-family: "El Messiri", sans-serif;
+  }
 }

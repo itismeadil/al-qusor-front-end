@@ -1,46 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
-import Sidebar from '../components/Sidebar';
-import { useLanguage } from '../context/LanguageContext';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
+import Sidebar from "../components/Sidebar";
+import { useLanguage } from "../context/LanguageContext";
 
 let colorIdCounter = 0;
-const newColor = () => ({ key: colorIdCounter++, name: '', files: [], previews: [] });
+const newColor = () => ({
+  key: colorIdCounter++,
+  name: "",
+  files: [],
+  previews: [],
+});
 
 const AddProduct = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState('');
-  const [newCategoryName, setNewCategoryName] = useState('');
-
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [categoryId, setCategoryId] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
   const [colors, setColors] = useState([newColor()]);
-
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const [createdProduct, setCreatedProduct] = useState(null); // holds result -> shows QR + print
+  const [error, setError] = useState("");
+  const [createdProduct, setCreatedProduct] = useState(null);
 
   useEffect(() => {
-    api.get('/categories').then(({ data }) => setCategories(data));
+    api.get("/categories").then(({ data }) => setCategories(data));
   }, []);
 
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) return;
-    const { data } = await api.post('/categories', { name: newCategoryName.trim() });
+    const { data } = await api.post("/categories", {
+      name: newCategoryName.trim(),
+    });
     setCategories((prev) => {
       const exists = prev.find((c) => c._id === data._id);
-      return exists ? prev : [...prev, data].sort((a, b) => a.name.localeCompare(b.name));
+      return exists
+        ? prev
+        : [...prev, data].sort((a, b) => a.name.localeCompare(b.name));
     });
     setCategoryId(data._id);
-    setNewCategoryName('');
+    setNewCategoryName("");
   };
 
   const updateColor = (key, patch) => {
-    setColors((prev) => prev.map((c) => (c.key === key ? { ...c, ...patch } : c)));
+    setColors((prev) =>
+      prev.map((c) => (c.key === key ? { ...c, ...patch } : c)),
+    );
   };
 
   const handleColorFiles = (key, fileList) => {
@@ -50,54 +59,54 @@ const AddProduct = () => {
   };
 
   const addColorRow = () => setColors((prev) => [...prev, newColor()]);
-  const removeColorRow = (key) => setColors((prev) => prev.filter((c) => c.key !== key));
+  const removeColorRow = (key) =>
+    setColors((prev) => prev.filter((c) => c.key !== key));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
+    setError("");
     if (!categoryId) {
-      setError('Please choose or add a category.');
+      setError("Please choose or add a category.");
       return;
     }
-
     setSubmitting(true);
     try {
-      // 1) Upload each color's images first, collecting the URLs Mongo will store
       const uploadedColors = [];
       for (const color of colors) {
         if (!color.name.trim()) continue;
         let imageUrls = [];
         if (color.files.length > 0) {
           const formData = new FormData();
-          color.files.forEach((f) => formData.append('images', f));
-          const { data } = await api.post('/upload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+          color.files.forEach((f) => formData.append("images", f));
+          const { data } = await api.post("/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
           });
           imageUrls = data.urls;
         }
         uploadedColors.push({ name: color.name.trim(), images: imageUrls });
       }
 
-      // 2) Create the product — the backend generates the QR code right after
-      const { data: product } = await api.post('/products', {
+      const { data: product } = await api.post("/products", {
         name,
         category: categoryId,
         description,
         price: Number(price),
-        colors: uploadedColors
+        colors: uploadedColors,
       });
 
       setCreatedProduct(product);
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not save this product. Please try again.');
+      setError(
+        err.response?.data?.message ||
+          "Could not save this product. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   const handlePrint = () => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     printWindow.document.write(`
       <html>
         <head><title>${createdProduct.name} — QR</title></head>
@@ -114,42 +123,45 @@ const AddProduct = () => {
 
   const resetForm = () => {
     setCreatedProduct(null);
-    setName('');
-    setDescription('');
-    setPrice('');
-    setCategoryId('');
+    setName("");
+    setDescription("");
+    setPrice("");
+    setCategoryId("");
     setColors([newColor()]);
   };
 
-  // ---- Success screen: QR code + print, shown right after saving ----
   if (createdProduct) {
     return (
-      <div className="min-h-screen flex bg-paper">
+      <div className="min-h-screen bg-ivory">
         <Sidebar />
-        <main className="flex-1 px-10 py-8 max-w-lg">
-          <div className="tag-edge bg-white rounded-b-xl rounded-t-sm border border-line px-8 py-10 text-center">
-            <p className="text-xs uppercase tracking-wide text-slate/50 mb-2">{t('productAdded')}</p>
-            <h1 className="font-display text-2xl text-ink mb-6">{createdProduct.name}</h1>
-
+        <main className="ml-64 px-10 py-10 max-w-lg">
+          <div className="bg-pearl rounded-xl border border-mist px-8 py-12 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-champagne/70 mb-3">
+              {t("productAdded")}
+            </p>
+            <h1 className="font-display text-3xl text-noir mb-8">
+              {createdProduct.name}
+            </h1>
             <img
               src={createdProduct.qrCodeUrl}
               alt="QR code"
-              className="w-56 h-56 mx-auto border border-line rounded-md"
+              className="w-64 h-64 mx-auto border border-mist rounded-xl"
             />
-            <p className="text-slate/60 text-sm mt-4 mb-6">{t('scanToView')}</p>
-
-            <div className="flex items-center justify-center gap-3">
+            <p className="text-charcoal/60 text-sm mt-6 mb-8">
+              {t("scanToView")}
+            </p>
+            <div className="flex items-center justify-center gap-4">
               <button
                 onClick={handlePrint}
-                className="bg-ink text-paper text-sm font-medium rounded-md px-5 py-2.5 hover:bg-clay transition-colors"
+                className="bg-noir text-pearl text-sm font-medium rounded-lg px-6 py-3 hover:bg-charcoal transition-colors"
               >
-                {t('print')}
+                {t("print")}
               </button>
               <button
                 onClick={resetForm}
-                className="text-sm font-medium text-slate hover:text-ink border border-line rounded-md px-5 py-2.5"
+                className="text-sm font-medium text-charcoal hover:text-noir border border-mist rounded-lg px-6 py-3"
               >
-                {t('doneAddAnother')}
+                {t("doneAddAnother")}
               </button>
             </div>
           </div>
@@ -159,127 +171,158 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-paper">
+    <div className="min-h-screen bg-ivory">
       <Sidebar />
-      <main className="flex-1 px-10 py-8 max-w-2xl">
-        <button onClick={() => navigate('/dashboard')} className="text-sm text-slate/60 hover:text-ink mb-6">
-          {t('backToProducts')}
+      <main className="ml-64 px-10 py-10 max-w-2xl">
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="text-sm text-shadow/60 hover:text-noir mb-8 transition-colors"
+        >
+          {t("backToProducts")}
         </button>
 
-        <form onSubmit={handleSubmit} className="tag-edge bg-white rounded-b-xl rounded-t-sm border border-line px-7 pt-8 pb-7">
-          <h1 className="font-display text-2xl text-ink mb-6">{t('addProduct')}</h1>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-pearl rounded-xl border border-mist px-8 pt-8 pb-8"
+        >
+          <h1 className="font-display text-3xl text-noir mb-8">
+            {t("addProduct")}
+          </h1>
 
           {error && (
-            <div className="mb-5 text-sm text-clay bg-clay/5 border border-clay/20 rounded-md px-3 py-2">
+            <div className="mb-5 text-sm text-noir bg-noir/5 border border-noir/10 rounded-lg px-4 py-3">
               {error}
             </div>
           )}
 
-          {/* Category: pick existing, or add a new one on the fly */}
-          <label className="block mb-4">
-            <span className="block text-xs font-medium text-slate/70 mb-1.5">{t('category')}</span>
+          <label className="block mb-5">
+            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+              {t("category")}
+            </span>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full rounded-md border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-clay/40"
+              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
             >
               <option value="">—</option>
               {categories.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
               ))}
             </select>
           </label>
 
-          <div className="flex gap-2 mb-6">
+          <div className="flex gap-3 mb-6">
             <input
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder={t('newCategory')}
-              className="flex-1 rounded-md border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-clay/40"
+              placeholder={t("newCategory")}
+              className="flex-1 rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
             />
             <button
               type="button"
               onClick={handleAddCategory}
-              className="text-sm font-medium border border-line rounded-md px-4 hover:bg-paper"
+              className="text-sm font-medium border border-mist rounded-lg px-5 hover:bg-ivory transition-colors"
             >
-              {t('add')}
+              {t("add")}
             </button>
           </div>
 
-          <label className="block mb-4">
-            <span className="block text-xs font-medium text-slate/70 mb-1.5">Product name</span>
+          <label className="block mb-5">
+            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+              Product name
+            </span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full rounded-md border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-clay/40"
+              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
             />
           </label>
 
-          <label className="block mb-6">
-            <span className="block text-xs font-medium text-slate/70 mb-1.5">{t('description')}</span>
+          <label className="block mb-5">
+            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+              {t("description")}
+            </span>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-clay/40"
+              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
             />
           </label>
 
           <label className="block mb-6">
-            <span className="block text-xs font-medium text-slate/70 mb-1.5">{t('price')} ({t('sar')})</span>
+            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+              {t("price")} ({t("sar")})
+            </span>
             <input
               type="number"
               step="0.01"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               required
-              className="w-full rounded-md border border-line px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-clay/40"
+              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
             />
           </label>
 
-          {/* Colors — each with its own name and set of clean photos */}
           <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="block text-xs font-medium text-slate/70">{t('colors')}</span>
-              <button type="button" onClick={addColorRow} className="text-xs font-medium text-clay hover:text-clay/70">
-                {t('addColor')}
+            <div className="flex items-center justify-between mb-3">
+              <span className="block text-xs font-medium text-charcoal/70">
+                {t("colors")}
+              </span>
+              <button
+                type="button"
+                onClick={addColorRow}
+                className="text-xs font-medium text-champagne hover:text-champagne/70"
+              >
+                {t("addColor")}
               </button>
             </div>
-
             <div className="space-y-4">
               {colors.map((color) => (
-                <div key={color.key} className="border border-line rounded-md p-4">
-                  <div className="flex gap-2 mb-3">
+                <div
+                  key={color.key}
+                  className="border border-mist rounded-lg p-4"
+                >
+                  <div className="flex gap-3 mb-3">
                     <input
                       value={color.name}
-                      onChange={(e) => updateColor(color.key, { name: e.target.value })}
-                      placeholder={t('colorName')}
-                      className="flex-1 rounded-md border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-clay/40"
+                      onChange={(e) =>
+                        updateColor(color.key, { name: e.target.value })
+                      }
+                      placeholder={t("colorName")}
+                      className="flex-1 rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
                     />
                     {colors.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeColorRow(color.key)}
-                        className="text-xs text-clay px-2"
+                        className="text-xs text-charcoal px-3 hover:text-noir"
                       >
-                        {t('delete')}
+                        {t("delete")}
                       </button>
                     )}
                   </div>
-
                   <input
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={(e) => handleColorFiles(color.key, e.target.files)}
+                    onChange={(e) =>
+                      handleColorFiles(color.key, e.target.files)
+                    }
                     className="text-xs"
                   />
-
                   {color.previews.length > 0 && (
-                    <div className="flex gap-2 mt-3 flex-wrap">
+                    <div className="flex gap-3 mt-3 flex-wrap">
                       {color.previews.map((src, i) => (
-                        <img key={i} src={src} alt="" className="w-14 h-14 object-cover rounded-md border border-line" />
+                        <img
+                          key={i}
+                          src={src}
+                          alt=""
+                          className="w-16 h-16 object-cover rounded-lg border border-mist"
+                        />
                       ))}
                     </div>
                   )}
@@ -291,9 +334,9 @@ const AddProduct = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-ink text-paper text-sm font-medium rounded-md py-2.5 hover:bg-clay transition-colors disabled:opacity-60"
+            className="w-full bg-noir text-pearl text-sm font-medium rounded-lg py-3 hover:bg-charcoal transition-colors disabled:opacity-60"
           >
-            {submitting ? t('saving') : t('save')}
+            {submitting ? t("saving") : t("save")}
           </button>
         </form>
       </main>

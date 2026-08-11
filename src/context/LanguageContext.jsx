@@ -1,17 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import translations from '../i18n/translations';
 
-// Convert Western numerals to Arabic numerals
-const toArabicNumerals = (str) => {
-  if (typeof str !== 'string') str = String(str);
-  const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-  return str.replace(/[0-9]/g, (digit) => arabicNumerals[digit]);
-};
-
 const LanguageContext = createContext(null);
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState(() => localStorage.getItem('lang') || 'ar');
+  const [lang, setLang] = useState(() => localStorage.getItem('lang') || 'en');
 
   useEffect(() => {
     localStorage.setItem('lang', lang);
@@ -23,7 +16,7 @@ export const LanguageProvider = ({ children }) => {
   const toggleLang = () => setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, toggleLang, t, toArabicNumerals }}>
+    <LanguageContext.Provider value={{ lang, setLang, toggleLang, t }}>
       {children}
     </LanguageContext.Provider>
   );

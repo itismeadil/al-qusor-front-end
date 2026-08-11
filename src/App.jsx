@@ -8,9 +8,6 @@ import ProductDetails from './pages/ProductDetails';
 import AddProduct from './pages/AddProduct';
 import PrivateRoute from './components/PrivateRoute';
 
-// The only place this path is referenced. Set VITE_ADMIN_LOGIN_PATH in
-// your .env to whatever hidden route you want — nothing on the public
-// site links to it.
 const ADMIN_LOGIN_PATH = import.meta.env.VITE_ADMIN_LOGIN_PATH || '/alqusor-owner-7x2k';
 
 function App() {
@@ -45,7 +42,6 @@ function App() {
         }
       />
 
-      {/* Anything unrecognized quietly lands on Home, not Login/Dashboard */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // On first load, check if there's already a valid session (cookie/token)
   useEffect(() => {
     const checkSession = async () => {
       try {
