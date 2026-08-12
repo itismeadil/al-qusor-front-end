@@ -60,82 +60,75 @@ const Home = () => {
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-8 py-20 w-full">
           <div className="max-w-3xl">
-              <div className="space-y-8">
-                {/* Badge */}
-                <div className="inline-flex items-center gap-3 bg-noir/5 backdrop-blur-sm border border-champagne/20 rounded-full px-5 py-2.5">
-                  <div className="flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse" />
-                    <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse delay-100" />
-                    <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse delay-200" />
-                  </div>
-                  <span className="text-xs tracking-[0.2em] uppercase text-noir/70 font-medium">
-                    {t("heroEyebrow")}
-                  </span>
+            <div className="space-y-8">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-3 bg-noir/5 backdrop-blur-sm border border-champagne/20 rounded-full px-5 py-2.5">
+                <div className="flex gap-1">
+                  <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse" />
+                  <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse delay-100" />
+                  <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse delay-200" />
                 </div>
+                <span className="text-xs tracking-[0.2em] uppercase text-noir/70 font-medium">
+                  {t("heroEyebrow")}
+                </span>
+              </div>
 
-                {/* Main heading */}
-                <div className="space-y-4">
-                  <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-noir leading-[1.1]">
-                    {t("heroTitle")}
-                  </h1>
-                  <div className="h-1 w-24 bg-gradient-to-r from-champagne to-transparent rounded-full" />
-                </div>
+              {/* Main heading */}
+              <div className="space-y-4">
+                <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-noir leading-[1.1]">
+                  {t("heroTitle")}
+                </h1>
+                <div className="h-1 w-24 bg-gradient-to-r from-champagne to-transparent rounded-full" />
+              </div>
 
-                {/* Subtitle */}
-                <p className="text-charcoal/70 text-lg md:text-xl max-w-lg leading-relaxed">
-                  {t("heroSubtitle")}
-                </p>
+              {/* Subtitle */}
+              <p className="text-charcoal/70 text-lg md:text-xl max-w-lg leading-relaxed">
+                {t("heroSubtitle")}
+              </p>
 
-                {/* CTA button */}
-                <div className="pt-4">
-                  <a
-                    href="#collection"
-                    className="inline-flex items-center justify-center gap-3 bg-noir text-pearl text-sm font-semibold px-8 py-4 rounded-xl hover:bg-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 group"
+              {/* CTA button */}
+              <div className="pt-4">
+                <a
+                  href="#collection"
+                  className="inline-flex items-center justify-center gap-3 bg-noir text-pearl text-sm font-semibold px-8 py-4 rounded-xl hover:bg-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 group"
+                >
+                  {t("heroCta")}
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="rtl:rotate-180 group-hover:translate-x-1 transition-transform duration-300"
                   >
-                    {t("heroCta")}
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      className="rtl:rotate-180 group-hover:translate-x-1 transition-transform duration-300"
-                    >
-                      <path
-                        d="M5 12h14m0 0l-6-6m6 6l-6 6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </a>
-                </div>
+                    <path
+                      d="M5 12h14m0 0l-6-6m6 6l-6 6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              </div>
 
-                {/* Stats/features */}
-                <div className="flex gap-8 pt-8 border-t border-mist/50">
-                  <div>
-                    <div className="text-3xl font-display text-noir mb-1">
-                      ✦
-                    </div>
-                    <div className="text-xs text-charcoal/60 uppercase tracking-wider">
-                      Premium
-                    </div>
+              {/* Stats/features */}
+              <div className="flex gap-8 pt-8 border-t border-mist/50">
+                <div>
+                  <div className="text-3xl font-display text-noir mb-1">✦</div>
+                  <div className="text-xs text-charcoal/60 uppercase tracking-wider">
+                    Premium
                   </div>
-                  <div>
-                    <div className="text-3xl font-display text-noir mb-1">
-                      ◈
-                    </div>
-                    <div className="text-xs text-charcoal/60 uppercase tracking-wider">
-                      Crafted
-                    </div>
+                </div>
+                <div>
+                  <div className="text-3xl font-display text-noir mb-1">◈</div>
+                  <div className="text-xs text-charcoal/60 uppercase tracking-wider">
+                    Crafted
                   </div>
-                  <div>
-                    <div className="text-3xl font-display text-noir mb-1">
-                      ❖
-                    </div>
-                    <div className="text-xs text-charcoal/60 uppercase tracking-wider">
-                      Elegant
-                    </div>
+                </div>
+                <div>
+                  <div className="text-3xl font-display text-noir mb-1">❖</div>
+                  <div className="text-xs text-charcoal/60 uppercase tracking-wider">
+                    Elegant
                   </div>
                 </div>
               </div>
