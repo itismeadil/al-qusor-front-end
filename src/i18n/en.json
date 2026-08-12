@@ -52,6 +52,8 @@
   "errorLoadProducts": "Could not load products.",
   "confirmDeleteProduct": "Delete this product? This cannot be undone.",
   "errorDeleteProduct": "Could not delete this product. Please try again.",
+  "confirmDelete": "Confirm Delete",
+  "cancel": "Cancel",
   "errorSelectCategory": "Please choose or add a category.",
   "errorSaveProduct": "Could not save this product. Please try again.",
   "qrCode": "QR code",

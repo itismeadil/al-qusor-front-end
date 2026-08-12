@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
+import ConfirmationModal from "../components/ConfirmationModal";
 import { useLanguage } from "../context/LanguageContext";
 import {
   SaudiRiyal,
@@ -27,6 +28,7 @@ const ProductDetails = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false });
 
   useEffect(() => {
     const load = async () => {
@@ -71,8 +73,11 @@ const ProductDetails = () => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm(t("confirmDeleteProduct"))) return;
+  const handleDelete = () => {
+    setDeleteModal({ isOpen: true });
+  };
+
+  const confirmDelete = async () => {
     await api.delete(`/products/${id}`);
     navigate("/dashboard");
   };
@@ -273,6 +278,13 @@ const ProductDetails = () => {
           </form>
         )}
       </main>
+
+      <ConfirmationModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false })}
+        onConfirm={confirmDelete}
+        message={t("confirmDeleteProduct")}
+      />
     </div>
   );
 };

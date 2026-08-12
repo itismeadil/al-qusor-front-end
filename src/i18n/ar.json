@@ -52,6 +52,8 @@
   "errorLoadProducts": "تعذر تحميل المنتجات.",
   "confirmDeleteProduct": "هل تريد حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.",
   "errorDeleteProduct": "تعذر حذف هذا المنتج. حاول مرة أخرى.",
+  "confirmDelete": "تأكيد الحذف",
+  "cancel": "إلغاء",
   "errorSelectCategory": "الرجاء اختيار فئة أو إضافة واحدة.",
   "errorSaveProduct": "تعذر حفظ هذا المنتج. حاول مرة أخرى.",
   "qrCode": "رمز QR",

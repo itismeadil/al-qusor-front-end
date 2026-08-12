@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
 import ProductTable from "../components/ProductTable";
+import ConfirmationModal from "../components/ConfirmationModal";
 import { useLanguage } from "../context/LanguageContext";
 import { Plus } from "lucide-react";
 
@@ -10,6 +11,10 @@ const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    productId: null,
+  });
   const { t } = useLanguage();
   const navigate = useNavigate();
 
@@ -30,10 +35,16 @@ const Dashboard = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm(t("confirmDeleteProduct"))) return;
+    setDeleteModal({ isOpen: true, productId: id });
+  };
+
+  const confirmDelete = async () => {
     try {
-      await api.delete(`/products/${id}`);
-      setProducts((prev) => prev.filter((p) => p._id !== id));
+      await api.delete(`/products/${deleteModal.productId}`);
+      setProducts((prev) =>
+        prev.filter((p) => p._id !== deleteModal.productId),
+      );
+      setDeleteModal({ isOpen: false, productId: null });
     } catch (err) {
       alert(t("errorDeleteProduct"));
     }
@@ -73,6 +84,13 @@ const Dashboard = () => {
           <ProductTable products={products} onDelete={handleDelete} />
         )}
       </main>
+
+      <ConfirmationModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, productId: null })}
+        onConfirm={confirmDelete}
+        message={t("confirmDeleteProduct")}
+      />
     </div>
   );
 };
