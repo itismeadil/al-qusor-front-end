@@ -91,7 +91,7 @@ const ProductDetails = () => {
 
         {loading && (
           <div className="flex items-center justify-center py-20">
-            <div className="text-shadow/60 text-sm">{t("loading")}</div>
+            <div className="loader"></div>
           </div>
         )}
 
