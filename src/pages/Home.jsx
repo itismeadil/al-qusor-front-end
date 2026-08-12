@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
+import { SaudiRiyal } from "lucide-react";
+import { formatPrice } from "../utils/formatNumber";
 
 const Home = () => {
-  const { t } = useLanguage();
+  const { t, tv, lang } = useLanguage();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("all");
@@ -28,7 +30,7 @@ const Home = () => {
   const activeCategoryName =
     activeCategory === "all"
       ? t("allCategories")
-      : categories.find((c) => c._id === activeCategory)?.name;
+      : tv(categories.find((c) => c._id === activeCategory)?.name);
 
   return (
     <div className="min-h-screen bg-ivory">
@@ -43,13 +45,10 @@ const Home = () => {
               alt=""
               className="w-full h-full object-cover blur-sm scale-105"
             />
-            {/* uniform light wash so text stays readable everywhere on the image, no directional patch */}
             <div className="absolute inset-0 bg-ivory/40" />
           </div>
 
-          <div
-            className={`relative max-w-3xl px-6 md:px-12 pt-20 pb-24 md:pt-28 md:pb-32 mr-auto text-left rtl:mr-0 rtl:ml-auto rtl:text-right`}
-          >
+          <div className="relative max-w-3xl px-6 md:px-12 pt-20 pb-24 md:pt-28 md:pb-32 mr-auto text-left rtl:mr-0 rtl:ml-auto rtl:text-right">
             <span className="inline-block text-xs tracking-[0.25em] uppercase text-champagne font-semibold mb-6">
               {t("heroEyebrow")}
             </span>
@@ -87,14 +86,14 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Category filter — single clean dropdown instead of a scrolling pill row */}
+      {/* Category filter */}
       <div
         id="collection"
         className="px-6 md:px-8 max-w-7xl mx-auto mt-16 mb-10 scroll-mt-6"
       >
         <div className="flex items-center justify-between flex-wrap gap-4">
           <h2 className="font-display text-2xl md:text-3xl text-noir">
-            {t("theCollection") || "The Collection"}
+            {t("theCollection")}
           </h2>
 
           <div className="relative">
@@ -106,12 +105,12 @@ const Home = () => {
               <option value="all">{t("allCategories")}</option>
               {categories.map((c) => (
                 <option key={c._id} value={c._id}>
-                  {c.name}
+                  {tv(c.name)}
                 </option>
               ))}
             </select>
             <svg
-              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2"
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rtl:right-auto rtl:left-4"
               width="14"
               height="14"
               viewBox="0 0 24 24"
@@ -130,7 +129,7 @@ const Home = () => {
 
         {activeCategory !== "all" && (
           <p className="text-sm text-shadow/60 mt-3">
-            {t("showing") || "Showing"}{" "}
+            {t("showing")}{" "}
             <span className="text-noir font-medium">{activeCategoryName}</span>
           </p>
         )}
@@ -138,7 +137,11 @@ const Home = () => {
 
       {/* Product grid */}
       <div className="px-6 md:px-8 max-w-7xl mx-auto pb-24">
-        {loading && <p className="text-shadow/60 text-sm">…</p>}
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <div className="loader"></div>
+          </div>
+        )}
 
         {!loading && visibleProducts.length === 0 && (
           <p className="text-shadow/60 text-sm text-center py-16">
@@ -167,13 +170,16 @@ const Home = () => {
                 </div>
                 <div className="p-5">
                   <p className="text-[11px] tracking-[0.15em] uppercase text-champagne/70 mb-2">
-                    {product.category?.name}
+                    {tv(product.category?.name)}
                   </p>
                   <p className="font-display text-lg text-noir mb-2 leading-tight">
                     {product.name}
                   </p>
                   <p className="text-sm text-charcoal font-medium">
-                    {product.price?.toFixed(2)} {t("sar")}
+                    <span className="flex items-center">
+                      <SaudiRiyal className="w-3 h-3 text-champagne mr-1" />
+                      {formatPrice(product.price, lang)}
+                    </span>
                   </p>
                 </div>
               </Link>

@@ -1,14 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
+import { SaudiRiyal, Edit, Trash2 } from "lucide-react";
+import { formatPrice } from "../utils/formatNumber";
 
 const ProductTable = ({ products, onDelete }) => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, tv, lang } = useLanguage();
+  const isRTL = lang === "ar";
 
   if (products.length === 0) {
     return (
-      <div className="bg-pearl rounded-xl border border-mist px-8 py-16 text-center">
+      <div className="bg-pearl rounded-2xl border border-mist px-8 py-16 text-center">
         <p className="text-noir font-medium mb-2">{t("noProductsTitle")}</p>
         <p className="text-shadow/60 text-sm">{t("noProductsBody")}</p>
       </div>
@@ -16,14 +19,21 @@ const ProductTable = ({ products, onDelete }) => {
   }
 
   return (
-    <div className="bg-pearl rounded-xl border border-mist overflow-hidden">
+    <div
+      dir={isRTL ? "rtl" : "ltr"}
+      className="bg-pearl rounded-2xl border border-mist overflow-hidden shadow-sm"
+    >
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left text-xs uppercase tracking-wide text-shadow/50 border-b border-mist">
-            <th className="px-6 py-4 font-medium">{t("products")}</th>
-            <th className="px-6 py-4 font-medium">{t("category")}</th>
-            <th className="px-6 py-4 font-medium">{t("price")}</th>
-            <th className="px-6 py-4 font-medium text-right">{t("actions")}</th>
+          <tr className="text-xs uppercase tracking-wide text-shadow/50 border-b border-mist bg-ivory/40">
+            <th className="px-6 py-4 font-medium text-start">
+              {t("products")}
+            </th>
+            <th className="px-6 py-4 font-medium text-start">
+              {t("category")}
+            </th>
+            <th className="px-6 py-4 font-medium text-start">{t("price")}</th>
+            <th className="px-6 py-4 font-medium text-end">{t("actions")}</th>
           </tr>
         </thead>
         <tbody>
@@ -32,14 +42,14 @@ const ProductTable = ({ products, onDelete }) => {
             return (
               <tr
                 key={product._id}
-                className="border-b border-mist last:border-0 hover:bg-ivory/60"
+                className="border-b border-mist last:border-0 hover:bg-ivory/60 transition-colors duration-200"
               >
                 <td
                   className="px-6 py-4 cursor-pointer"
                   onClick={() => navigate(`/dashboard/products/${product._id}`)}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-mist/50 overflow-hidden shrink-0">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-mist/50 overflow-hidden shrink-0 border border-mist/30">
                       {firstImage && (
                         <img
                           src={firstImage}
@@ -48,34 +58,48 @@ const ProductTable = ({ products, onDelete }) => {
                         />
                       )}
                     </div>
-                    <span className="font-medium text-noir">
+                    <span className="font-medium text-noir text-base">
                       {product.name}
                     </span>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-shadow/70">
-                  {product.category?.name || "—"}
+
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-ivory/60 text-shadow/80 text-xs font-medium">
+                    {tv(product.category?.name) || "—"}
+                  </span>
                 </td>
-                <td className="px-6 py-4 text-shadow/70">
-                  {typeof product.price === "number"
-                    ? `${product.price.toFixed(2)} ${t("sar")}`
-                    : "—"}
+
+                <td className="px-6 py-4">
+                  {typeof product.price === "number" ? (
+                    <div className="flex items-center gap-2 text-noir font-semibold">
+                      <SaudiRiyal className="w-4 h-4 text-champagne" />
+                      <span>{formatPrice(product.price, lang)}</span>
+                    </div>
+                  ) : (
+                    "—"
+                  )}
                 </td>
-                <td className="px-6 py-4 text-right space-x-4">
-                  <button
-                    onClick={() =>
-                      navigate(`/dashboard/products/${product._id}`)
-                    }
-                    className="text-xs font-medium text-shadow hover:text-noir transition-colors"
-                  >
-                    {t("edit")}
-                  </button>
-                  <button
-                    onClick={() => onDelete(product._id)}
-                    className="text-xs font-medium text-charcoal hover:text-noir transition-colors"
-                  >
-                    {t("delete")}
-                  </button>
+
+                <td className="px-6 py-4">
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() =>
+                        navigate(`/dashboard/products/${product._id}`)
+                      }
+                      className="p-2 rounded-lg hover:bg-ivory text-shadow hover:text-noir transition-colors duration-200"
+                      title={t("edit")}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => onDelete(product._id)}
+                      className="p-2 rounded-lg hover:bg-red-50 text-charcoal hover:text-red-600 transition-colors duration-200"
+                      title={t("delete")}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             );

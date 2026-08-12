@@ -4,6 +4,7 @@ import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
 import ProductTable from "../components/ProductTable";
 import { useLanguage } from "../context/LanguageContext";
+import { Plus } from "lucide-react";
 
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
@@ -18,7 +19,7 @@ const Dashboard = () => {
       const { data } = await api.get("/products");
       setProducts(data);
     } catch (err) {
-      setError("Could not load products.");
+      setError(t("errorLoadProducts"));
     } finally {
       setLoading(false);
     }
@@ -29,36 +30,45 @@ const Dashboard = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this product? This cannot be undone.")) return;
+    if (!window.confirm(t("confirmDeleteProduct"))) return;
     try {
       await api.delete(`/products/${id}`);
       setProducts((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
-      alert("Could not delete this product. Please try again.");
+      alert(t("errorDeleteProduct"));
     }
   };
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
       <Sidebar />
-      <main className="ml-64 px-10 py-10">
-        <div className="flex items-center justify-between mb-10">
+      <main className="ml-64 px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-display text-3xl text-noir">{t("products")}</h1>
-            <p className="text-charcoal/60 text-sm mt-2">
-              {t("productsSubtitle")}
-            </p>
+            <h1 className="font-display text-4xl text-noir mb-2">
+              {t("theCollection")}
+            </h1>
+            <p className="text-charcoal/60 text-sm">{t("productsSubtitle")}</p>
           </div>
           <button
             onClick={() => navigate("/dashboard/add-product")}
-            className="bg-noir text-pearl text-sm font-medium px-5 py-3 rounded-lg hover:bg-charcoal transition-colors"
+            className="bg-noir text-pearl text-sm font-medium px-6 py-3 rounded-xl hover:bg-charcoal transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
           >
+            <Plus className="w-5 h-5" />
             {t("addProduct")}
           </button>
         </div>
 
-        {loading && <p className="text-shadow/60 text-sm">Loading…</p>}
-        {error && <p className="text-noir text-sm">{error}</p>}
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <div className="loader"></div>
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl text-sm">
+            {error}
+          </div>
+        )}
         {!loading && !error && (
           <ProductTable products={products} onDelete={handleDelete} />
         )}

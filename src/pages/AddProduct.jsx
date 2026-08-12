@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
 import { useLanguage } from "../context/LanguageContext";
+import {
+  SaudiRiyal,
+  Plus,
+  X,
+  Upload,
+  ArrowLeft,
+  Printer,
+  CheckCircle,
+} from "lucide-react";
 
 let colorIdCounter = 0;
 const newColor = () => ({
@@ -13,7 +22,7 @@ const newColor = () => ({
 });
 
 const AddProduct = () => {
-  const { t } = useLanguage();
+  const { t, tv } = useLanguage();
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
@@ -66,7 +75,7 @@ const AddProduct = () => {
     e.preventDefault();
     setError("");
     if (!categoryId) {
-      setError("Please choose or add a category.");
+      setError(t("errorSelectCategory"));
       return;
     }
     setSubmitting(true);
@@ -96,10 +105,7 @@ const AddProduct = () => {
 
       setCreatedProduct(product);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Could not save this product. Please try again.",
-      );
+      setError(err.response?.data?.message || t("errorSaveProduct"));
     } finally {
       setSubmitting(false);
     }
@@ -132,34 +138,40 @@ const AddProduct = () => {
 
   if (createdProduct) {
     return (
-      <div className="min-h-screen bg-ivory">
+      <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
         <Sidebar />
-        <main className="ml-64 px-10 py-10 max-w-lg">
-          <div className="bg-pearl rounded-xl border border-mist px-8 py-12 text-center">
+        <main className="ml-64 px-8 py-8 max-w-lg">
+          <div className="bg-pearl rounded-2xl border border-mist px-8 py-12 text-center shadow-lg">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
             <p className="text-xs uppercase tracking-[0.2em] text-champagne/70 mb-3">
               {t("productAdded")}
             </p>
             <h1 className="font-display text-3xl text-noir mb-8">
               {createdProduct.name}
             </h1>
-            <img
-              src={createdProduct.qrCodeUrl}
-              alt="QR code"
-              className="w-64 h-64 mx-auto border border-mist rounded-xl"
-            />
+            <div className="relative inline-block mb-6">
+              <img
+                src={createdProduct.qrCodeUrl}
+                alt={t("qrCode")}
+                className="w-64 h-64 mx-auto border-2 border-mist rounded-2xl shadow-md"
+              />
+            </div>
             <p className="text-charcoal/60 text-sm mt-6 mb-8">
               {t("scanToView")}
             </p>
             <div className="flex items-center justify-center gap-4">
               <button
                 onClick={handlePrint}
-                className="bg-noir text-pearl text-sm font-medium rounded-lg px-6 py-3 hover:bg-charcoal transition-colors"
+                className="bg-noir text-pearl text-sm font-medium rounded-xl px-6 py-3 hover:bg-charcoal transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
               >
+                <Printer className="w-4 h-4" />
                 {t("print")}
               </button>
               <button
                 onClick={resetForm}
-                className="text-sm font-medium text-charcoal hover:text-noir border border-mist rounded-lg px-6 py-3"
+                className="text-sm font-medium text-charcoal hover:text-noir border border-mist rounded-xl px-6 py-3 hover:border-champagne/50 transition-all duration-300"
               >
                 {t("doneAddAnother")}
               </button>
@@ -171,26 +183,27 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
       <Sidebar />
-      <main className="ml-64 px-10 py-10 max-w-2xl">
+      <main className="ml-64 px-8 py-8 max-w-2xl">
         <button
           onClick={() => navigate("/dashboard")}
-          className="text-sm text-shadow/60 hover:text-noir mb-8 transition-colors"
+          className="flex items-center gap-2 text-sm text-shadow/60 hover:text-noir mb-6 transition-colors"
         >
+          <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
           {t("backToProducts")}
         </button>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-pearl rounded-xl border border-mist px-8 pt-8 pb-8"
+          className="bg-pearl rounded-2xl border border-mist px-8 pt-8 pb-8 shadow-lg"
         >
           <h1 className="font-display text-3xl text-noir mb-8">
             {t("addProduct")}
           </h1>
 
           {error && (
-            <div className="mb-5 text-sm text-noir bg-noir/5 border border-noir/10 rounded-lg px-4 py-3">
+            <div className="mb-5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
               {error}
             </div>
           )}
@@ -202,12 +215,12 @@ const AddProduct = () => {
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
+              className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
             >
               <option value="">—</option>
               {categories.map((c) => (
                 <option key={c._id} value={c._id}>
-                  {c.name}
+                  {tv(c.name)}
                 </option>
               ))}
             </select>
@@ -218,26 +231,27 @@ const AddProduct = () => {
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
               placeholder={t("newCategory")}
-              className="flex-1 rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
+              className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
             />
             <button
               type="button"
               onClick={handleAddCategory}
-              className="text-sm font-medium border border-mist rounded-lg px-5 hover:bg-ivory transition-colors"
+              className="text-sm font-medium border border-mist rounded-xl px-5 hover:bg-ivory transition-colors flex items-center gap-2"
             >
+              <Plus className="w-4 h-4" />
               {t("add")}
             </button>
           </div>
 
           <label className="block mb-5">
             <span className="block text-xs font-medium text-charcoal/70 mb-2">
-              Product name
+              {t("productName")}
             </span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
+              className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
             />
           </label>
 
@@ -249,22 +263,27 @@ const AddProduct = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
+              className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
             />
           </label>
 
           <label className="block mb-6">
             <span className="block text-xs font-medium text-charcoal/70 mb-2">
-              {t("price")} ({t("sar")})
+              {t("price")}
             </span>
-            <input
-              type="number"
-              step="0.01"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              required
-              className="w-full rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-4">
+                <SaudiRiyal className="w-4 h-4 text-champagne" />
+              </div>
+              <input
+                type="number"
+                step="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                required
+                className="w-full rounded-xl border border-mist pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30 rtl:pl-4 rtl:pr-10"
+              />
+            </div>
           </label>
 
           <div className="mb-6">
@@ -275,8 +294,9 @@ const AddProduct = () => {
               <button
                 type="button"
                 onClick={addColorRow}
-                className="text-xs font-medium text-champagne hover:text-champagne/70"
+                className="text-xs font-medium text-champagne hover:text-champagne/70 flex items-center gap-1"
               >
+                <Plus className="w-3 h-3" />
                 {t("addColor")}
               </button>
             </div>
@@ -284,7 +304,7 @@ const AddProduct = () => {
               {colors.map((color) => (
                 <div
                   key={color.key}
-                  className="border border-mist rounded-lg p-4"
+                  className="border border-mist rounded-xl p-4 bg-ivory/30"
                 >
                   <div className="flex gap-3 mb-3">
                     <input
@@ -293,27 +313,38 @@ const AddProduct = () => {
                         updateColor(color.key, { name: e.target.value })
                       }
                       placeholder={t("colorName")}
-                      className="flex-1 rounded-lg border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all"
+                      className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-pearl"
                     />
                     {colors.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeColorRow(color.key)}
-                        className="text-xs text-charcoal px-3 hover:text-noir"
+                        className="text-xs text-charcoal px-3 hover:text-noir hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
                       >
+                        <X className="w-3 h-3" />
                         {t("delete")}
                       </button>
                     )}
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) =>
-                      handleColorFiles(color.key, e.target.files)
-                    }
-                    className="text-xs"
-                  />
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) =>
+                        handleColorFiles(color.key, e.target.files)
+                      }
+                      className="text-xs hidden"
+                      id={`file-${color.key}`}
+                    />
+                    <label
+                      htmlFor={`file-${color.key}`}
+                      className="flex items-center justify-center gap-2 w-full rounded-xl border-2 border-dashed border-mist px-4 py-4 text-sm text-shadow/70 hover:border-champagne/50 hover:text-noir cursor-pointer transition-all bg-pearl"
+                    >
+                      <Upload className="w-4 h-4" />
+                      {t("images")}
+                    </label>
+                  </div>
                   {color.previews.length > 0 && (
                     <div className="flex gap-3 mt-3 flex-wrap">
                       {color.previews.map((src, i) => (
@@ -321,7 +352,7 @@ const AddProduct = () => {
                           key={i}
                           src={src}
                           alt=""
-                          className="w-16 h-16 object-cover rounded-lg border border-mist"
+                          className="w-16 h-16 object-cover rounded-xl border border-mist shadow-sm"
                         />
                       ))}
                     </div>
@@ -334,9 +365,37 @@ const AddProduct = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-noir text-pearl text-sm font-medium rounded-lg py-3 hover:bg-charcoal transition-colors disabled:opacity-60"
+            className="w-full bg-noir text-pearl text-sm font-medium rounded-xl py-4 hover:bg-charcoal transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {submitting ? t("saving") : t("save")}
+            {submitting ? (
+              <>
+                <svg
+                  className="animate-spin w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                {t("saving")}
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                {t("save")}
+              </>
+            )}
           </button>
         </form>
       </main>

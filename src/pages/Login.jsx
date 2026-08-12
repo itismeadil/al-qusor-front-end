@@ -21,10 +21,7 @@ const Login = () => {
       await login(username, password);
       navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Could not sign in. Check your details and try again.",
-      );
+      setError(err.response?.data?.message || t("errorSignIn"));
     } finally {
       setSubmitting(false);
     }
@@ -39,7 +36,7 @@ const Login = () => {
 
         <div className="text-center mb-10">
           <span className="inline-block text-xs tracking-[0.2em] uppercase text-champagne/70 font-medium">
-            {t("appName")} Admin
+            {t("appName")} {t("adminLabel")}
           </span>
           <h1 className="font-display text-4xl text-noir mt-3">
             {t("welcomeBack")}
