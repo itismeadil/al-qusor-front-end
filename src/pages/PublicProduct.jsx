@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
+import ProductCard from "../components/ProductCard";
 import { SaudiRiyal, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatPrice } from "../utils/formatNumber";
 
@@ -21,38 +22,6 @@ const downloadImage = async (url, filename) => {
   } catch (err) {
     window.open(url, "_blank");
   }
-};
-
-const RelatedCard = ({ product, t, tv, lang }) => {
-  const image = product.colors?.[0]?.images?.[0];
-  return (
-    <Link
-      to={`/p/${product._id}`}
-      className="group bg-pearl rounded-xl overflow-hidden border border-mist hover:border-champagne/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-    >
-      <div className="aspect-square bg-mist/50 overflow-hidden">
-        {image && (
-          <img
-            src={image}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        )}
-      </div>
-      <div className="p-5">
-        <p className="text-[11px] tracking-[0.15em] uppercase text-champagne/70 mb-2">
-          {tv(product.category?.name)}
-        </p>
-        <p className="font-display text-lg text-noir mb-2 leading-tight">
-          {product.name}
-        </p>
-        <p className="text-sm text-charcoal font-medium flex items-center gap-1">
-          <SaudiRiyal className="w-3 h-3 text-champagne" />
-          {formatPrice(product.price, lang)}
-        </p>
-      </div>
-    </Link>
-  );
 };
 
 const PublicProduct = () => {
@@ -157,17 +126,17 @@ const PublicProduct = () => {
                     <>
                       <button
                         onClick={goToPreviousImage}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white hover:bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-50 border-2 border-champagne/30"
                       >
-                        <ChevronLeft className="w-5 h-5 text-noir rtl:rotate-180" />
+                        <ChevronLeft className="w-7 h-7 text-noir rtl:rotate-180" />
                       </button>
                       <button
                         onClick={goToNextImage}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white hover:bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-50 border-2 border-champagne/30"
                       >
-                        <ChevronRight className="w-5 h-5 text-noir rtl:rotate-180" />
+                        <ChevronRight className="w-7 h-7 text-noir rtl:rotate-180" />
                       </button>
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full">
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-sm px-4 py-1.5 rounded-full z-50 border border-white/20">
                         {activeImage + 1} / {images.length}
                       </div>
                     </>
@@ -230,8 +199,8 @@ const PublicProduct = () => {
                   {product.name}
                 </h1>
                 <p className="text-3xl text-charcoal font-semibold mb-8 flex items-center gap-2">
-                  <SaudiRiyal className="w-6 h-6 text-champagne" />
                   {formatPrice(product.price, lang)}
+                  <SaudiRiyal className="w-6 h-6 text-champagne" />
                 </p>
 
                 {product.colors?.length > 0 && (
@@ -281,12 +250,12 @@ const PublicProduct = () => {
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                   {related.map((p) => (
-                    <RelatedCard
+                    <ProductCard
                       key={p._id}
                       product={p}
-                      t={t}
                       tv={tv}
                       lang={lang}
+                      aspectRatio="aspect-square"
                     />
                   ))}
                 </div>

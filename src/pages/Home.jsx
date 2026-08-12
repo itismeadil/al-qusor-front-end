@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
-import { SaudiRiyal } from "lucide-react";
-import { formatPrice } from "../utils/formatNumber";
+import ProductCard from "../components/ProductCard";
 
 const Home = () => {
   const { t, tv, lang } = useLanguage();
@@ -201,41 +200,14 @@ const Home = () => {
         )}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {visibleProducts.map((product) => {
-            const image = product.colors?.[0]?.images?.[0];
-            return (
-              <Link
-                key={product._id}
-                to={`/p/${product._id}`}
-                className="group bg-pearl rounded-xl overflow-hidden border border-mist hover:border-champagne/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="aspect-[4/5] bg-mist/50 overflow-hidden relative">
-                  {image && (
-                    <img
-                      src={image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-noir/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-                <div className="p-5">
-                  <p className="text-[11px] tracking-[0.15em] uppercase text-champagne/70 mb-2">
-                    {tv(product.category?.name)}
-                  </p>
-                  <p className="font-display text-lg text-noir mb-2 leading-tight">
-                    {product.name}
-                  </p>
-                  <p className="text-sm text-charcoal font-medium">
-                    <span className="flex items-center">
-                      <SaudiRiyal className="w-3 h-3 text-champagne mr-1" />
-                      {formatPrice(product.price, lang)}
-                    </span>
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
+          {visibleProducts.map((product) => (
+            <ProductCard
+              key={product._id}
+              product={product}
+              tv={tv}
+              lang={lang}
+            />
+          ))}
         </div>
       </div>
     </div>
