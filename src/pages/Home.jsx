@@ -37,51 +37,109 @@ const Home = () => {
       <Navbar />
 
       {/* Hero */}
-      <div className="px-6 md:px-8">
-        <div className="max-w-7xl mx-auto relative overflow-hidden rounded-b-2xl mt-4">
-          <div className="absolute inset-0">
-            <img
-              src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2832&auto=format&fit=crop"
-              alt=""
-              className="w-full h-full object-cover blur-sm scale-105"
-            />
-            <div className="absolute inset-0 bg-ivory/40" />
-          </div>
+      <div className="relative min-h-[70vh] flex items-center overflow-hidden">
+        {/* Background with split design */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-ivory via-pearl to-champagne/20" />
 
-          <div className="relative max-w-3xl px-6 md:px-12 pt-20 pb-24 md:pt-28 md:pb-32 mr-auto text-left rtl:mr-0 rtl:ml-auto rtl:text-right">
-            <span className="inline-block text-xs tracking-[0.25em] uppercase text-champagne font-semibold mb-6">
-              {t("heroEyebrow")}
-            </span>
+          {/* Abstract geometric shapes */}
+          <div className="absolute top-20 right-20 w-96 h-96 bg-champagne/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 left-20 w-80 h-80 bg-noir/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-champagne/5 rounded-full blur-3xl" />
 
-            <h1 className="font-display text-5xl md:text-7xl text-noir mb-6 leading-tight">
-              {t("heroTitle")}
-            </h1>
+          {/* Grid pattern overlay */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `linear-gradient(to right, #1a1a1a 1px, transparent 1px),
+                             linear-gradient(to bottom, #1a1a1a 1px, transparent 1px)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+        </div>
 
-            <p className="text-charcoal/70 text-base md:text-lg mb-10 max-w-xl leading-relaxed">
-              {t("heroSubtitle")}
-            </p>
+        <div className="relative max-w-7xl mx-auto px-6 md:px-8 py-20 w-full">
+          <div className="max-w-3xl">
+              <div className="space-y-8">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-3 bg-noir/5 backdrop-blur-sm border border-champagne/20 rounded-full px-5 py-2.5">
+                  <div className="flex gap-1">
+                    <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse" />
+                    <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse delay-100" />
+                    <span className="w-1.5 h-1.5 bg-champagne rounded-full animate-pulse delay-200" />
+                  </div>
+                  <span className="text-xs tracking-[0.2em] uppercase text-noir/70 font-medium">
+                    {t("heroEyebrow")}
+                  </span>
+                </div>
 
-            <a
-              href="#collection"
-              className="inline-flex items-center gap-3 bg-noir text-pearl text-sm font-medium px-8 py-4 rounded-lg hover:bg-charcoal transition-colors duration-300"
-            >
-              {t("heroCta")}
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="rtl:rotate-180"
-              >
-                <path
-                  d="M5 12h14m0 0l-6-6m6 6l-6 6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
+                {/* Main heading */}
+                <div className="space-y-4">
+                  <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-noir leading-[1.1]">
+                    {t("heroTitle")}
+                  </h1>
+                  <div className="h-1 w-24 bg-gradient-to-r from-champagne to-transparent rounded-full" />
+                </div>
+
+                {/* Subtitle */}
+                <p className="text-charcoal/70 text-lg md:text-xl max-w-lg leading-relaxed">
+                  {t("heroSubtitle")}
+                </p>
+
+                {/* CTA button */}
+                <div className="pt-4">
+                  <a
+                    href="#collection"
+                    className="inline-flex items-center justify-center gap-3 bg-noir text-pearl text-sm font-semibold px-8 py-4 rounded-xl hover:bg-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 group"
+                  >
+                    {t("heroCta")}
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="rtl:rotate-180 group-hover:translate-x-1 transition-transform duration-300"
+                    >
+                      <path
+                        d="M5 12h14m0 0l-6-6m6 6l-6 6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </div>
+
+                {/* Stats/features */}
+                <div className="flex gap-8 pt-8 border-t border-mist/50">
+                  <div>
+                    <div className="text-3xl font-display text-noir mb-1">
+                      ✦
+                    </div>
+                    <div className="text-xs text-charcoal/60 uppercase tracking-wider">
+                      Premium
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-display text-noir mb-1">
+                      ◈
+                    </div>
+                    <div className="text-xs text-charcoal/60 uppercase tracking-wider">
+                      Crafted
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-display text-noir mb-1">
+                      ❖
+                    </div>
+                    <div className="text-xs text-charcoal/60 uppercase tracking-wider">
+                      Elegant
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
