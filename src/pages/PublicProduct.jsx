@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
-import { SaudiRiyal, Download } from "lucide-react";
+import { SaudiRiyal, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatPrice } from "../utils/formatNumber";
 
 const downloadImage = async (url, filename) => {
@@ -103,6 +103,14 @@ const PublicProduct = () => {
     });
   };
 
+  const goToPreviousImage = () => {
+    setActiveImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const goToNextImage = () => {
+    setActiveImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <div className="min-h-screen bg-ivory">
       <Navbar />
@@ -134,7 +142,7 @@ const PublicProduct = () => {
             <div className="grid md:grid-cols-2 gap-12 md:gap-16">
               {/* Gallery */}
               <div>
-                <div className="rounded-xl overflow-hidden border border-mist bg-pearl shadow-sm">
+                <div className="rounded-xl overflow-hidden border border-mist bg-pearl shadow-sm relative">
                   <div className="aspect-square bg-mist/50">
                     {images[activeImage] && (
                       <img
@@ -144,10 +152,30 @@ const PublicProduct = () => {
                       />
                     )}
                   </div>
+
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={goToPreviousImage}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+                      >
+                        <ChevronLeft className="w-5 h-5 text-noir rtl:rotate-180" />
+                      </button>
+                      <button
+                        onClick={goToNextImage}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+                      >
+                        <ChevronRight className="w-5 h-5 text-noir rtl:rotate-180" />
+                      </button>
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full">
+                        {activeImage + 1} / {images.length}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {images.length > 1 && (
-                  <div className="flex gap-3 mt-4 overflow-x-auto">
+                  <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
                     {images.map((img, i) => (
                       <button
                         key={i}
@@ -157,10 +185,10 @@ const PublicProduct = () => {
                         <img
                           src={img}
                           alt=""
-                          className={`w-20 h-20 rounded-lg object-cover border-2 ${
+                          className={`w-20 h-20 rounded-lg object-cover border-2 transition-all ${
                             i === activeImage
-                              ? "border-champagne"
-                              : "border-transparent"
+                              ? "border-champagne scale-105"
+                              : "border-transparent hover:border-mist"
                           }`}
                         />
                       </button>
