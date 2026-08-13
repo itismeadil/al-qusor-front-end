@@ -124,7 +124,10 @@ const PublicProduct = () => {
             <div className="grid md:grid-cols-2 gap-12 md:gap-16">
               <div>
                 <div className="rounded-xl overflow-hidden border border-mist bg-pearl shadow-sm relative">
-                  <div className="aspect-square overflow-hidden bg-mist/50">
+                  <div
+                    className="aspect-square overflow-hidden bg-mist/50"
+                    dir="ltr"
+                  >
                     <div
                       className="flex h-full transition-transform duration-400 ease-out"
                       style={{
@@ -146,7 +149,7 @@ const PublicProduct = () => {
                     <>
                       <button
                         onClick={goToPreviousImage}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors z-10"
+                        className="absolute start-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors z-10"
                       >
                         <svg
                           width="18"
@@ -157,16 +160,24 @@ const PublicProduct = () => {
                           strokeWidth="2"
                           className="text-noir"
                         >
-                          <path
-                            d="M15 18l-6-6 6-6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
+                          {lang === "ar" ? (
+                            <path
+                              d="M9 18l6-6-6-6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          ) : (
+                            <path
+                              d="M15 18l-6-6 6-6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          )}
                         </svg>
                       </button>
                       <button
                         onClick={goToNextImage}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors z-10"
+                        className="absolute end-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors z-10"
                       >
                         <svg
                           width="18"
@@ -177,11 +188,19 @@ const PublicProduct = () => {
                           strokeWidth="2"
                           className="text-noir"
                         >
-                          <path
-                            d="M9 18l6-6-6-6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
+                          {lang === "ar" ? (
+                            <path
+                              d="M15 18l-6-6 6-6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          ) : (
+                            <path
+                              d="M9 18l6-6-6-6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          )}
                         </svg>
                       </button>
 

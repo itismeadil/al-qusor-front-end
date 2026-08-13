@@ -38,6 +38,8 @@ const AddProduct = () => {
 
   useEffect(() => {
     api.get("/categories").then(({ data }) => setCategories(data));
+    // Reset createdProduct state when component mounts
+    setCreatedProduct(null);
   }, []);
 
   const handleAddCategory = async () => {

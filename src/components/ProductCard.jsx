@@ -46,9 +46,13 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
                 e.stopPropagation();
                 goToPreviousImage();
               }}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
+              className="absolute start-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
             >
-              <ChevronLeft className="w-5 h-5 text-noir rtl:rotate-180" />
+              {lang === "ar" ? (
+                <ChevronRight className="w-5 h-5 text-noir" />
+              ) : (
+                <ChevronLeft className="w-5 h-5 text-noir" />
+              )}
             </button>
             <button
               onClick={(e) => {
@@ -56,9 +60,13 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
                 e.stopPropagation();
                 goToNextImage();
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
+              className="absolute end-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
             >
-              <ChevronRight className="w-5 h-5 text-noir rtl:rotate-180" />
+              {lang === "ar" ? (
+                <ChevronLeft className="w-5 h-5 text-noir" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-noir" />
+              )}
             </button>
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full z-20">
               {activeImage + 1} / {images.length}
