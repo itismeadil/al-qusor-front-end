@@ -4,8 +4,7 @@ import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
-import { SaudiRiyal, Download, ChevronLeft, ChevronRight } from "lucide-react";
-import { formatPrice } from "../utils/formatNumber";
+import { SaudiRiyal } from "lucide-react";
 
 const downloadImage = async (url, filename) => {
   try {
@@ -29,14 +28,12 @@ const PublicProduct = () => {
   const { t, tv, lang } = useLanguage();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
-  const [activeColor, setActiveColor] = useState(0);
   const [activeImage, setActiveImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    setActiveColor(0);
     setActiveImage(0);
 
     api
@@ -60,25 +57,50 @@ const PublicProduct = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const currentColor = product?.colors?.[activeColor];
-  const images = currentColor?.images || [];
+  const allImages =
+    product?.colors?.flatMap((color) =>
+      (color.images || []).map((url) => ({ url, colorName: color.name })),
+    ) || [];
 
-  const fileNameFor = (index) =>
-    `${product?.name?.replace(/\s+/g, "-").toLowerCase() || "product"}-${currentColor?.name?.replace(/\s+/g, "-").toLowerCase() || "photo"}-${index + 1}.jpg`;
+  const fileNameFor = (index) => {
+    const img = allImages[index];
+    const productSlug =
+      product?.name?.replace(/\s+/g, "-").toLowerCase() || "product";
+    const colorSlug =
+      img?.colorName?.replace(/\s+/g, "-").toLowerCase() || "photo";
+    return `${productSlug}-${colorSlug}-${index + 1}.jpg`;
+  };
 
+  const handleDownloadCurrent = () => {
+    const img = allImages[activeImage];
+    if (img) downloadImage(img.url, fileNameFor(activeImage));
+  };
+
+  // Secondary option — grabs every photo across every color, matching
+  // how the slider now shows everything together in one gallery.
   const handleDownloadAll = () => {
-    images.forEach((img, i) => {
-      setTimeout(() => downloadImage(img, fileNameFor(i)), i * 400);
+    allImages.forEach((img, i) => {
+      setTimeout(() => downloadImage(img.url, fileNameFor(i)), i * 400);
     });
   };
 
   const goToPreviousImage = () => {
-    setActiveImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setActiveImage((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
   };
 
   const goToNextImage = () => {
-    setActiveImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setActiveImage((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
   };
+
+  // Jump the slider to this color's first photo in the combined gallery
+  const goToColor = (colorName) => {
+    const index = allImages.findIndex((img) => img.colorName === colorName);
+    if (index !== -1) setActiveImage(index);
+  };
+
+  // Which color the photo currently on screen belongs to — used to
+  // highlight the matching color button, without needing separate state
+  const activeColorName = allImages[activeImage]?.colorName;
 
   return (
     <div className="min-h-screen bg-ivory">
@@ -95,7 +117,6 @@ const PublicProduct = () => {
           </div>
         ) : (
           <>
-            {/* Breadcrumb */}
             <nav className="flex items-center gap-2 text-xs text-shadow/60 mb-10">
               <Link to="/" className="hover:text-noir transition-colors">
                 {t("home")}
@@ -108,51 +129,97 @@ const PublicProduct = () => {
               </span>
             </nav>
 
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16">
-              {/* Gallery */}
+            <div className="grid md:grid-cols-2 gap-15 md:gap-16">
               <div>
                 <div className="rounded-xl overflow-hidden border border-mist bg-pearl shadow-sm relative">
-                  <div className="aspect-square bg-mist/50">
-                    {images[activeImage] && (
-                      <img
-                        src={images[activeImage]}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
+                  <div className="aspect-square overflow-hidden bg-mist/50">
+                    <div
+                      className="flex h-full transition-transform duration-400 ease-out"
+                      style={{
+                        transform: `translateX(-${activeImage * 100}%)`,
+                      }}
+                    >
+                      {allImages.map((img, i) => (
+                        <img
+                          key={i}
+                          src={img.url}
+                          alt={product.name}
+                          className="w-full h-full object-cover shrink-0"
+                        />
+                      ))}
+                    </div>
                   </div>
 
-                  {images.length > 1 && (
+                  {allImages.length > 1 && (
                     <>
                       <button
                         onClick={goToPreviousImage}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white hover:bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-50 border-2 border-champagne/30"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors z-10"
                       >
-                        <ChevronLeft className="w-7 h-7 text-noir rtl:rotate-180" />
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          className="text-noir"
+                        >
+                          <path
+                            d="M15 18l-6-6 6-6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
                       </button>
                       <button
                         onClick={goToNextImage}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white hover:bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-50 border-2 border-champagne/30"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors z-10"
                       >
-                        <ChevronRight className="w-7 h-7 text-noir rtl:rotate-180" />
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          className="text-noir"
+                        >
+                          <path
+                            d="M9 18l6-6-6-6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
                       </button>
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-sm px-4 py-1.5 rounded-full z-50 border border-white/20">
-                        {activeImage + 1} / {images.length}
+
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                        {allImages.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setActiveImage(i)}
+                            className={`h-1.5 rounded-full transition-all ${
+                              i === activeImage
+                                ? "w-5 bg-noir"
+                                : "w-1.5 bg-noir/30"
+                            }`}
+                          />
+                        ))}
                       </div>
                     </>
                   )}
                 </div>
 
-                {images.length > 1 && (
+                {allImages.length > 1 && (
                   <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
-                    {images.map((img, i) => (
+                    {allImages.map((img, i) => (
                       <button
                         key={i}
                         onClick={() => setActiveImage(i)}
                         className="shrink-0"
                       >
                         <img
-                          src={img}
+                          src={img.url}
                           alt=""
                           className={`w-20 h-20 rounded-lg object-cover border-2 transition-all ${
                             i === activeImage
@@ -165,9 +232,9 @@ const PublicProduct = () => {
                   </div>
                 )}
 
-                {images.length > 0 && (
+                {allImages.length > 0 && (
                   <button
-                    onClick={handleDownloadAll}
+                    onClick={handleDownloadCurrent}
                     className="w-full mt-6 flex items-center justify-center gap-3 bg-noir text-pearl text-sm font-medium rounded-lg py-4 hover:bg-charcoal transition-colors duration-300"
                   >
                     <svg
@@ -184,13 +251,20 @@ const PublicProduct = () => {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    {t("downloadAllPhotos")}{" "}
-                    {images.length > 1 ? `(${images.length})` : ""}
+                    {t("downloadPhoto")}
+                  </button>
+                )}
+
+                {allImages.length > 1 && (
+                  <button
+                    onClick={handleDownloadAll}
+                    className="w-full mt-2.5 text-xs font-medium text-shadow/70 hover:text-noir transition-colors py-1"
+                  >
+                    {t("downloadAllPhotos")} ({allImages.length})
                   </button>
                 )}
               </div>
 
-              {/* Details */}
               <div className="flex flex-col justify-center">
                 <p className="text-[11px] tracking-[0.2em] uppercase text-champagne/70 mb-3">
                   {tv(product.category?.name)}
@@ -212,12 +286,9 @@ const PublicProduct = () => {
                       {product.colors.map((color, i) => (
                         <button
                           key={i}
-                          onClick={() => {
-                            setActiveColor(i);
-                            setActiveImage(0);
-                          }}
+                          onClick={() => goToColor(color.name)}
                           className={`text-sm px-5 py-2.5 rounded-lg border transition-all ${
-                            i === activeColor
+                            color.name === activeColorName
                               ? "bg-noir text-pearl border-noir"
                               : "border-mist text-shadow hover:border-champagne/50 hover:text-noir"
                           }`}
@@ -242,7 +313,6 @@ const PublicProduct = () => {
               </div>
             </div>
 
-            {/* Related products */}
             {related.length > 0 && (
               <div className="mt-20 md:mt-28">
                 <h2 className="font-display text-3xl text-noir mb-8">

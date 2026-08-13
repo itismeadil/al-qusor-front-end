@@ -62,9 +62,34 @@ const AddProduct = () => {
   };
 
   const handleColorFiles = (key, fileList) => {
-    const files = Array.from(fileList);
-    const previews = files.map((f) => URL.createObjectURL(f));
-    updateColor(key, { files, previews });
+    const newFiles = Array.from(fileList);
+    const newPreviews = newFiles.map((f) => URL.createObjectURL(f));
+    setColors((prev) =>
+      prev.map((c) =>
+        c.key === key
+          ? {
+              ...c,
+              files: [...c.files, ...newFiles],
+              previews: [...c.previews, ...newPreviews],
+            }
+          : c,
+      ),
+    );
+  };
+
+  // New: remove a single photo from a color before submitting
+  const removeColorImage = (key, index) => {
+    setColors((prev) =>
+      prev.map((c) =>
+        c.key === key
+          ? {
+              ...c,
+              files: c.files.filter((_, i) => i !== index),
+              previews: c.previews.filter((_, i) => i !== index),
+            }
+          : c,
+      ),
+    );
   };
 
   const addColorRow = () => setColors((prev) => [...prev, newColor()]);
@@ -331,9 +356,10 @@ const AddProduct = () => {
                       type="file"
                       accept="image/*"
                       multiple
-                      onChange={(e) =>
-                        handleColorFiles(color.key, e.target.files)
-                      }
+                      onChange={(e) => {
+                        handleColorFiles(color.key, e.target.files);
+                        e.target.value = ""; // lets you pick the same file again later if needed
+                      }}
                       className="text-xs hidden"
                       id={`file-${color.key}`}
                     />
@@ -348,12 +374,20 @@ const AddProduct = () => {
                   {color.previews.length > 0 && (
                     <div className="flex gap-3 mt-3 flex-wrap">
                       {color.previews.map((src, i) => (
-                        <img
-                          key={i}
-                          src={src}
-                          alt=""
-                          className="w-16 h-16 object-cover rounded-xl border border-mist shadow-sm"
-                        />
+                        <div key={i} className="relative group">
+                          <img
+                            src={src}
+                            alt=""
+                            className="w-16 h-16 object-cover rounded-xl border border-mist shadow-sm"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeColorImage(color.key, i)}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-noir text-pearl rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            ×
+                          </button>
+                        </div>
                       ))}
                     </div>
                   )}

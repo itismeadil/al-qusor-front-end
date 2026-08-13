@@ -11,6 +11,8 @@ import {
   Trash2,
   CheckCircle,
   QrCode,
+  Upload,
+  X,
 } from "lucide-react";
 
 const ProductDetails = () => {
@@ -29,6 +31,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false });
+  const [newImages, setNewImages] = useState({});
 
   useEffect(() => {
     const load = async () => {
@@ -59,12 +62,59 @@ const ProductDetails = () => {
     }));
   };
 
+  const handleAddImages = (colorIndex, files) => {
+    const fileArray = Array.from(files);
+    const previews = fileArray.map((f) => URL.createObjectURL(f));
+    setNewImages((prev) => ({
+      ...prev,
+      [colorIndex]: [...(prev[colorIndex] || []), ...fileArray],
+    }));
+    setForm((prev) => ({
+      ...prev,
+      colors: prev.colors.map((c, i) =>
+        i === colorIndex ? { ...c, images: [...c.images, ...previews] } : c,
+      ),
+    }));
+  };
+
+  const handleRemoveImage = (colorIndex, imageIndex) => {
+    setForm((prev) => ({
+      ...prev,
+      colors: prev.colors.map((c, i) =>
+        i === colorIndex
+          ? { ...c, images: c.images.filter((_, idx) => idx !== imageIndex) }
+          : c,
+      ),
+    }));
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
+      // Upload new images first
+      const updatedColors = [...form.colors];
+
+      for (const colorIndex in newImages) {
+        const files = newImages[colorIndex];
+        if (files.length > 0) {
+          const formData = new FormData();
+          files.forEach((f) => formData.append("images", f));
+          const { data } = await api.post("/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+
+          // Add new image URLs to the color
+          updatedColors[colorIndex] = {
+            ...updatedColors[colorIndex],
+            images: [...updatedColors[colorIndex].images, ...data.urls],
+          };
+        }
+      }
+
       await api.put(`/products/${id}`, {
         ...form,
+        colors: updatedColors,
         price: Number(form.price) || 0,
       });
       navigate("/dashboard");
@@ -178,23 +228,57 @@ const ProductDetails = () => {
                   {form.colors.map((color, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 border border-mist rounded-xl p-4 bg-ivory/30"
+                      className="border border-mist rounded-xl p-4 bg-ivory/30"
                     >
-                      <div className="flex gap-2">
-                        {color.images.slice(0, 3).map((img, j) => (
-                          <img
-                            key={j}
-                            src={img}
-                            alt=""
-                            className="w-12 h-12 rounded-xl object-cover border border-mist/50"
-                          />
-                        ))}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex gap-2 flex-wrap">
+                          {color.images.slice(0, 6).map((img, j) => (
+                            <div key={j} className="relative">
+                              <img
+                                src={img}
+                                alt=""
+                                className="w-12 h-12 rounded-xl object-cover border border-mist/50"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveImage(i, j)}
+                                className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                          {color.images.length > 6 && (
+                            <div className="w-12 h-12 rounded-xl bg-mist/30 flex items-center justify-center text-xs text-charcoal/60">
+                              +{color.images.length - 6}
+                            </div>
+                          )}
+                        </div>
+                        <input
+                          value={color.name}
+                          onChange={(e) => updateColorName(i, e.target.value)}
+                          className="flex-1 text-sm border-none focus:outline-none bg-transparent"
+                        />
                       </div>
-                      <input
-                        value={color.name}
-                        onChange={(e) => updateColorName(i, e.target.value)}
-                        className="flex-1 text-sm border-none focus:outline-none bg-transparent"
-                      />
+
+                      {/* Add more images for this color */}
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => handleAddImages(i, e.target.files)}
+                          className="text-xs hidden"
+                          id={`add-images-${i}`}
+                        />
+                        <label
+                          htmlFor={`add-images-${i}`}
+                          className="flex items-center justify-center gap-2 w-full rounded-lg border border-dashed border-mist px-3 py-2 text-xs text-shadow/70 hover:border-champagne/50 hover:text-noir cursor-pointer transition-all bg-pearl"
+                        >
+                          <Upload className="w-3 h-3" />
+                          Add more images for {color.name || "this color"}
+                        </label>
+                      </div>
                     </div>
                   ))}
                 </div>

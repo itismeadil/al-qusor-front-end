@@ -73,8 +73,8 @@ const ProductTable = ({ products, onDelete }) => {
                 <td className="px-6 py-4">
                   {typeof product.price === "number" ? (
                     <div className="flex items-center gap-2 text-noir font-semibold">
-                      <SaudiRiyal className="w-4 h-4 text-champagne" />
-                      <span>{formatPrice(product.price, lang)}</span>
+                      <SaudiRiyal className="w-3 h-3 text-champagne" />
+                      <span className="text-sm">{product.price}</span>
                     </div>
                   ) : (
                     "—"
