@@ -62,28 +62,6 @@ const PublicProduct = () => {
       (color.images || []).map((url) => ({ url, colorName: color.name })),
     ) || [];
 
-  const fileNameFor = (index) => {
-    const img = allImages[index];
-    const productSlug =
-      product?.name?.replace(/\s+/g, "-").toLowerCase() || "product";
-    const colorSlug =
-      img?.colorName?.replace(/\s+/g, "-").toLowerCase() || "photo";
-    return `${productSlug}-${colorSlug}-${index + 1}.jpg`;
-  };
-
-  const handleDownloadCurrent = () => {
-    const img = allImages[activeImage];
-    if (img) downloadImage(img.url, fileNameFor(activeImage));
-  };
-
-  // Secondary option — grabs every photo across every color, matching
-  // how the slider now shows everything together in one gallery.
-  const handleDownloadAll = () => {
-    allImages.forEach((img, i) => {
-      setTimeout(() => downloadImage(img.url, fileNameFor(i)), i * 400);
-    });
-  };
-
   const goToPreviousImage = () => {
     setActiveImage((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
   };
@@ -101,6 +79,20 @@ const PublicProduct = () => {
   // Which color the photo currently on screen belongs to — used to
   // highlight the matching color button, without needing separate state
   const activeColorName = allImages[activeImage]?.colorName;
+
+  const fileNameFor = (index) => {
+    const img = allImages[index];
+    const productSlug =
+      product?.name?.replace(/\s+/g, "-").toLowerCase() || "product";
+    const colorSlug =
+      img?.colorName?.replace(/\s+/g, "-").toLowerCase() || "photo";
+    return `${productSlug}-${colorSlug}-${index + 1}.jpg`;
+  };
+
+  const handleDownloadCurrent = () => {
+    const img = allImages[activeImage];
+    if (img) downloadImage(img.url, fileNameFor(activeImage));
+  };
 
   return (
     <div className="min-h-screen bg-ivory">
@@ -129,7 +121,7 @@ const PublicProduct = () => {
               </span>
             </nav>
 
-            <div className="grid md:grid-cols-2 gap-15 md:gap-16">
+            <div className="grid md:grid-cols-2 gap-12 md:gap-16">
               <div>
                 <div className="rounded-xl overflow-hidden border border-mist bg-pearl shadow-sm relative">
                   <div className="aspect-square overflow-hidden bg-mist/50">
@@ -211,7 +203,7 @@ const PublicProduct = () => {
                 </div>
 
                 {allImages.length > 1 && (
-                  <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
+                  <div className="flex gap-3 mt-7 overflow-x-auto pb-2">
                     {allImages.map((img, i) => (
                       <button
                         key={i}
@@ -231,7 +223,6 @@ const PublicProduct = () => {
                     ))}
                   </div>
                 )}
-
                 {allImages.length > 0 && (
                   <button
                     onClick={handleDownloadCurrent}
@@ -252,15 +243,6 @@ const PublicProduct = () => {
                       />
                     </svg>
                     {t("downloadPhoto")}
-                  </button>
-                )}
-
-                {allImages.length > 1 && (
-                  <button
-                    onClick={handleDownloadAll}
-                    className="w-full mt-2.5 text-xs font-medium text-shadow/70 hover:text-noir transition-colors py-1"
-                  >
-                    {t("downloadAllPhotos")} ({allImages.length})
                   </button>
                 )}
               </div>
