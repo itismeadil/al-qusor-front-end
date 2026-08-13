@@ -167,7 +167,7 @@ const AddProduct = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
         <Sidebar />
-        <main className="ml-64 px-8 py-8 max-w-lg">
+        <main className="ml-64 px-8 pt-24 pb-8 max-w-lg">
           <div className="bg-pearl rounded-2xl border border-mist px-8 py-12 text-center shadow-lg">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-8 h-8 text-green-600" />
@@ -212,7 +212,7 @@ const AddProduct = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
       <Sidebar />
-      <main className="ml-64 px-8 py-8 max-w-2xl">
+      <main className="ml-64 px-8 pt-24 pb-8 max-w-2xl">
         <button
           onClick={() => navigate("/dashboard")}
           className="flex items-center gap-2 text-sm text-shadow/60 hover:text-noir mb-6 transition-colors"

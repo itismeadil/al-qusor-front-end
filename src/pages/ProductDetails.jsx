@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
 import ConfirmationModal from "../components/ConfirmationModal";
+import NotFound from "./NotFound";
 import { useLanguage } from "../context/LanguageContext";
 import {
   SaudiRiyal,
@@ -29,26 +30,32 @@ const ProductDetails = () => {
     colors: [],
   });
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false });
   const [newImages, setNewImages] = useState({});
 
   useEffect(() => {
     const load = async () => {
-      const [{ data: p }, { data: cats }] = await Promise.all([
-        api.get(`/products/${id}`),
-        api.get("/categories"),
-      ]);
-      setProduct(p);
-      setCategories(cats);
-      setForm({
-        name: p.name || "",
-        description: p.description || "",
-        price: p.price ?? "",
-        category: p.category?._id || "",
-        colors: p.colors || [],
-      });
-      setLoading(false);
+      try {
+        const [{ data: p }, { data: cats }] = await Promise.all([
+          api.get(`/products/${id}`),
+          api.get("/categories"),
+        ]);
+        setProduct(p);
+        setCategories(cats);
+        setForm({
+          name: p.name || "",
+          description: p.description || "",
+          price: p.price ?? "",
+          category: p.category?._id || "",
+          colors: p.colors || [],
+        });
+        setLoading(false);
+      } catch (err) {
+        setNotFound(true);
+        setLoading(false);
+      }
     };
     load();
   }, [id]);
@@ -135,7 +142,7 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
       <Sidebar />
-      <main className="ml-64 px-8 py-8 max-w-3xl">
+      <main className="ml-64 px-8 pt-24 pb-8 max-w-3xl">
         <button
           onClick={() => navigate("/dashboard")}
           className="flex items-center gap-2 text-sm text-shadow/60 hover:text-noir mb-6 transition-colors"
@@ -150,7 +157,9 @@ const ProductDetails = () => {
           </div>
         )}
 
-        {!loading && product && (
+        {notFound && <NotFound withSidebar={true} />}
+
+        {!loading && !notFound && product && (
           <form
             onSubmit={handleSave}
             className="bg-pearl rounded-2xl border border-mist px-8 pt-8 pb-8 shadow-lg"

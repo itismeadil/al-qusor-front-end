@@ -1,14 +1,16 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import PublicProduct from './pages/PublicProduct';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import ProductDetails from './pages/ProductDetails';
-import AddProduct from './pages/AddProduct';
-import PrivateRoute from './components/PrivateRoute';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
+import PublicProduct from "./pages/PublicProduct";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProductDetails from "./pages/ProductDetails";
+import AddProduct from "./pages/AddProduct";
+import NotFound from "./pages/NotFound";
+import PrivateRoute from "./components/PrivateRoute";
 
-const ADMIN_LOGIN_PATH = import.meta.env.VITE_ADMIN_LOGIN_PATH || '/alqusor-owner-7x2k';
+const ADMIN_LOGIN_PATH =
+  import.meta.env.VITE_ADMIN_LOGIN_PATH || "/alqusor-owner-7x2k";
 
 function App() {
   return (
@@ -42,7 +44,7 @@ function App() {
         }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

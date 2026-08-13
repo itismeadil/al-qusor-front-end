@@ -7,7 +7,10 @@ const Navbar = () => {
   const { t } = useLanguage();
 
   return (
-    <div className="sticky top-0 z-20 bg-ivory/90 backdrop-blur-md border-b border-mist">
+    <div
+      style={{ zIndex: "999999" }}
+      className="sticky top-0 z-[999999] bg-ivory/90 backdrop-blur-md border-b border-mist"
+    >
       <div className="max-w-7xl mx-auto px-6 md:px-8 py-5 flex items-center justify-between">
         <Link
           to="/"

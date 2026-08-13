@@ -53,7 +53,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory via-ivory to-pearl/50">
       <Sidebar />
-      <main className="ml-64 px-8 py-8">
+      <main className="ml-64 px-8 pt-24 pb-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="font-display text-4xl text-noir mb-2">

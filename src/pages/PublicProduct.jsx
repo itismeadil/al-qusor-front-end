@@ -4,6 +4,7 @@ import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
+import NotFound from "./NotFound";
 import { SaudiRiyal } from "lucide-react";
 
 const downloadImage = async (url, filename) => {
@@ -98,11 +99,9 @@ const PublicProduct = () => {
     <div className="min-h-screen bg-ivory">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8 py-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 pt-24 pb-10">
         {notFound ? (
-          <div className="flex items-center justify-center py-32 text-charcoal/70 text-sm px-4 text-center">
-            {t("detailsUnavailable")}
-          </div>
+          <NotFound />
         ) : loading ? (
           <div className="flex items-center justify-center py-32">
             <div className="loader"></div>

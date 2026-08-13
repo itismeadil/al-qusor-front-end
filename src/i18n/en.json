@@ -60,5 +60,12 @@
   "openPrint": "Open / print",
   "showing": "Showing",
   "adminLabel": "Admin",
-  "errorSignIn": "Could not sign in. Check your details and try again."
+  "errorSignIn": "Could not sign in. Check your details and try again.",
+  "pageNotFound": "Page Not Found",
+  "pageNotFoundSubtitle": "The page you're looking for doesn't exist or has been removed.",
+  "goHome": "Go Home",
+  "pageNotFoundTitle": "404",
+  "oops": "Oops!",
+  "pageNotFoundMessage": "We couldn't find what you're looking for.",
+  "pageNotFoundHint": "The page might have been moved, deleted, or never existed."
 }
