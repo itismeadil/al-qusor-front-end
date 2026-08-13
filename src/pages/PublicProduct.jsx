@@ -199,8 +199,8 @@ const PublicProduct = () => {
                   {product.name}
                 </h1>
                 <p className="text-3xl text-charcoal font-semibold mb-8 flex items-center gap-2">
-                  {formatPrice(product.price, lang)}
-                  <SaudiRiyal className="w-6 h-6 text-champagne" />
+                  {product.price}
+                  <SaudiRiyal className="w-9 h-9 text-champagne" />
                 </p>
 
                 {product.colors?.length > 0 && (
