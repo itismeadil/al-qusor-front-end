@@ -46,12 +46,12 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
                 e.stopPropagation();
                 goToPreviousImage();
               }}
-              className="absolute start-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
+              className="absolute start-2 top-1/2 -translate-y-1/2 w-7 h-7 md:w-9 md:h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
             >
               {lang === "ar" ? (
-                <ChevronRight className="w-5 h-5 text-noir" />
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-noir" />
               ) : (
-                <ChevronLeft className="w-5 h-5 text-noir" />
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-noir" />
               )}
             </button>
             <button
@@ -60,15 +60,15 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
                 e.stopPropagation();
                 goToNextImage();
               }}
-              className="absolute end-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
+              className="absolute end-2 top-1/2 -translate-y-1/2 w-7 h-7 md:w-9 md:h-9 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
             >
               {lang === "ar" ? (
-                <ChevronLeft className="w-5 h-5 text-noir" />
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-noir" />
               ) : (
-                <ChevronRight className="w-5 h-5 text-noir" />
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-noir" />
               )}
             </button>
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full z-20">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/60 text-white text-[10px] md:text-xs px-2 py-0.5 md:px-3 md:py-1 rounded-full z-20">
               {activeImage + 1} / {images.length}
             </div>
           </>
@@ -76,7 +76,7 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
 
         {/* Color dots */}
         {product.colors?.length > 1 && (
-          <div className="absolute bottom-2 right-2 flex gap-1.5 z-20">
+          <div className="absolute bottom-2 right-2 flex gap-1 z-20">
             {product.colors.map((color, i) => (
               <button
                 key={i}
@@ -85,7 +85,7 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
                   e.stopPropagation();
                   handleColorChange(i);
                 }}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${
                   i === activeColor
                     ? "bg-champagne scale-125 ring-2 ring-white"
                     : "bg-white/70 hover:bg-white"
@@ -97,17 +97,17 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
 
         <div className="absolute inset-0 bg-gradient-to-t from-noir/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
-      <div className="p-5">
-        <p className="text-[11px] tracking-[0.15em] uppercase text-champagne/70 mb-2">
+      <div className="p-3 md:p-5">
+        <p className="text-[10px] md:text-[11px] tracking-[0.15em] uppercase text-champagne/70 mb-1 md:mb-2">
           {tv(product.category?.name)}
         </p>
-        <p className="font-display text-lg text-noir mb-2 leading-tight">
+        <p className="font-display text-sm md:text-lg text-noir mb-1 md:mb-2 leading-tight">
           {product.name}
         </p>
-        <p className="text-sm text-charcoal font-medium">
+        <p className="text-xs md:text-sm text-charcoal font-medium">
           <span className="flex items-center">
             {product.price}
-            <SaudiRiyal className="w-5 h-5 text-champagne mr-1" />
+            <SaudiRiyal className="w-4 h-4 md:w-5 md:h-5 text-champagne mr-1" />
           </span>
         </p>
       </div>

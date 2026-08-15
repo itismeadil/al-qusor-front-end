@@ -67,5 +67,19 @@
   "pageNotFoundTitle": "404",
   "oops": "Oops!",
   "pageNotFoundMessage": "We couldn't find what you're looking for.",
-  "pageNotFoundHint": "The page might have been moved, deleted, or never existed."
+  "pageNotFoundHint": "The page might have been moved, deleted, or never existed.",
+  "footerDescription": "Premium furniture crafted with elegance and designed for modern living. Experience the art of fine furniture at Al Qusor.",
+  "contactUs": "Contact Us",
+  "availableOnWhatsApp": "Available on WhatsApp",
+  "addressLine1": "123 Furniture Street",
+  "addressLine2": "Riyadh, Saudi Arabia",
+  "saudiArabia": "Saudi Arabia",
+  "businessHours": "Business Hours",
+  "saturdayThursday": "Saturday - Thursday",
+  "friday": "Friday",
+  "allRightsReserved": "All rights reserved.",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+  "searchPlaceholder": "Search products...",
+  "allColors": "All Colors"
 }

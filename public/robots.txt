@@ -1,0 +1,12 @@
+# Robots.txt for Al Qusor Furniture
+# REPLACE https://your-actual-vercel-url.vercel.app with your actual Vercel URL
+
+User-agent: *
+Allow: /
+
+# Disallow admin paths
+Disallow: /alqusor-owner-7x2k
+Disallow: /dashboard
+
+# Sitemap
+Sitemap: https://your-actual-vercel-url.vercel.app/sitemap.xml

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- REPLACE https://your-actual-vercel-url.vercel.app with your actual Vercel URL -->
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://your-actual-vercel-url.vercel.app/</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Note: Product pages are dynamic and should be added via server-side sitemap generation -->
+  <!-- For a production site, implement server-side sitemap generation that includes all products -->
+  
+</urlset>

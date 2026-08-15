@@ -67,5 +67,19 @@
   "pageNotFoundTitle": "404",
   "oops": "عذراً!",
   "pageNotFoundMessage": "لم نتمكن من العثور على ما تبحث عنه.",
-  "pageNotFoundHint": "ربما تم نقل الصفحة أو حذفها أو لم تكن موجودة أصلاً."
+  "pageNotFoundHint": "ربما تم نقل الصفحة أو حذفها أو لم تكن موجودة أصلاً.",
+  "footerDescription": "أثاث فاخر مصنع بأناقة ومصمم للعيش الحديث. اكتشف فن الأثاث الراقي في القصور.",
+  "contactUs": "تواصل معنا",
+  "availableOnWhatsApp": "متاح على واتساب",
+  "addressLine1": "شارع الأثاث ١٢٣",
+  "addressLine2": "الرياض، المملكة العربية السعودية",
+  "saudiArabia": "المملكة العربية السعودية",
+  "businessHours": "ساعات العمل",
+  "saturdayThursday": "السبت - الخميس",
+  "friday": "الجمعة",
+  "allRightsReserved": "جميع الحقوق محفوظة.",
+  "privacyPolicy": "سياسة الخصوصية",
+  "termsOfService": "شروط الخدمة",
+  "searchPlaceholder": "ابحث عن المنتجات...",
+  "allColors": "جميع الألوان"
 }

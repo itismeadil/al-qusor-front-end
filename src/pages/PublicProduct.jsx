@@ -4,6 +4,8 @@ import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
+import Footer from "../components/Footer";
+import StructuredData from "../components/StructuredData";
 import NotFound from "./NotFound";
 import { SaudiRiyal } from "lucide-react";
 
@@ -96,8 +98,17 @@ const PublicProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="flex flex-col min-h-screen bg-ivory">
       <Navbar />
+      {!notFound && !loading && product && (
+        <StructuredData
+          productName={product.name}
+          productDescription={product.description || t("heroSubtitle")}
+          productImage={allImages[0]?.url || ""}
+          productPrice={product.price}
+          productUrl={typeof window !== "undefined" ? window.location.href : ""}
+        />
+      )}
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 pt-24 pb-10">
         {notFound ? (
@@ -334,6 +345,7 @@ const PublicProduct = () => {
           </>
         )}
       </div>
+      <Footer />
     </div>
   );
 };
