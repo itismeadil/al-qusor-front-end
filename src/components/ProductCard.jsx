@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, SaudiRiyal } from "lucide-react";
 import { formatPrice } from "../utils/formatNumber";
@@ -6,6 +6,8 @@ import { formatPrice } from "../utils/formatNumber";
 const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
   const [activeColor, setActiveColor] = useState(0);
   const [activeImage, setActiveImage] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   const currentColor = product.colors?.[activeColor];
   const images = currentColor?.images || [];
@@ -23,12 +25,41 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
     setActiveImage(0);
   };
 
+  // Touch handlers for swipe functionality
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeThreshold = 50; // Minimum swipe distance
+    const diff = touchStartX.current - touchEndX.current;
+
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swiped left - go to next image
+        goToNextImage();
+      } else {
+        // Swiped right - go to previous image
+        goToPreviousImage();
+      }
+    }
+  };
+
   return (
     <Link
       to={`/p/${product._id}`}
       className="group bg-pearl rounded-xl overflow-hidden border border-mist hover:border-champagne/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
-      <div className={`${aspectRatio} bg-mist/50 overflow-hidden relative`}>
+      <div
+        className={`${aspectRatio} bg-mist/50 overflow-hidden relative`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {images[activeImage] && (
           <img
             src={images[activeImage]}

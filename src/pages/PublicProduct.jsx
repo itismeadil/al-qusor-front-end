@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
@@ -34,6 +34,8 @@ const PublicProduct = () => {
   const [activeImage, setActiveImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     setLoading(true);
@@ -71,6 +73,30 @@ const PublicProduct = () => {
 
   const goToNextImage = () => {
     setActiveImage((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+  };
+
+  // Touch handlers for swipe functionality
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeThreshold = 50; // Minimum swipe distance
+    const diff = touchStartX.current - touchEndX.current;
+
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swiped left - go to next image
+        goToNextImage();
+      } else {
+        // Swiped right - go to previous image
+        goToPreviousImage();
+      }
+    }
   };
 
   // Jump the slider to this color's first photo in the combined gallery
@@ -137,6 +163,9 @@ const PublicProduct = () => {
                   <div
                     className="aspect-square overflow-hidden bg-mist/50"
                     dir="ltr"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
                   >
                     <div
                       className="flex h-full transition-transform duration-400 ease-out"
