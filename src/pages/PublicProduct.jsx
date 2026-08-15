@@ -110,7 +110,7 @@ const PublicProduct = () => {
         />
       )}
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8 pt-24 pb-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 pt-8 pb-10">
         {notFound ? (
           <NotFound />
         ) : loading ? (
