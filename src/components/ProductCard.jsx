@@ -107,22 +107,28 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
 
         {/* Color dots */}
         {product.colors?.length > 1 && (
-          <div className="absolute bottom-2 right-2 flex gap-1 z-20">
-            {product.colors.map((color, i) => (
-              <button
-                key={i}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleColorChange(i);
-                }}
-                className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${
-                  i === activeColor
-                    ? "bg-champagne scale-125 ring-2 ring-white"
-                    : "bg-white/70 hover:bg-white"
-                }`}
-              />
-            ))}
+          <div className="absolute bottom-2 right-2 flex flex-col items-end gap-1.5 z-20">
+            <div className="flex gap-1">
+              {product.colors.map((color, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleColorChange(i);
+                  }}
+                  className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${
+                    i === activeColor
+                      ? "bg-champagne scale-125 ring-2 ring-white"
+                      : "bg-white/70 hover:bg-white"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="bg-noir/80 backdrop-blur-sm text-pearl text-[9px] md:text-[10px] px-2 py-0.5 rounded-full font-medium tracking-wide">
+              {product.colors.length}{" "}
+              {product.colors.length === 1 ? "color" : "colors"}
+            </span>
           </div>
         )}
 
