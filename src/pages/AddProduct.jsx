@@ -31,6 +31,7 @@ const AddProduct = () => {
   const [categoryId, setCategoryId] = useState("");
   const [newCategoryNameAr, setNewCategoryNameAr] = useState("");
   const [newCategoryNameEn, setNewCategoryNameEn] = useState("");
+  const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
   const [nameAr, setNameAr] = useState("");
   const [nameEn, setNameEn] = useState("");
   const [descriptionAr, setDescriptionAr] = useState("");
@@ -65,6 +66,17 @@ const AddProduct = () => {
     setCategoryId(data._id);
     setNewCategoryNameAr("");
     setNewCategoryNameEn("");
+    setIsAddingNewCategory(false);
+  };
+
+  const handleCategoryModeChange = (mode) => {
+    setIsAddingNewCategory(mode === "new");
+    if (mode === "new") {
+      setCategoryId("");
+    } else {
+      setNewCategoryNameAr("");
+      setNewCategoryNameEn("");
+    }
   };
 
   const updateColor = (key, patch) => {
@@ -275,52 +287,75 @@ const AddProduct = () => {
             </div>
           )}
 
-          <label className="block mb-5">
-            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+          <div className="mb-6">
+            <span className="block text-xs font-medium text-charcoal/70 mb-3">
               {t("category")}
             </span>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
-            >
-              <option value="">—</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {tv(c.nameAr) || c.nameAr}
-                </option>
-              ))}
-            </select>
-          </label>
 
-          <div className="mb-6">
-            <label className="block mb-2">
-              <span className="block text-xs font-medium text-charcoal/70 mb-2">
-                {t("newCategory")} (العربية)
-              </span>
-              <div className="flex gap-3 mb-2">
+            <div className="flex gap-4 mb-4">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
-                  value={newCategoryNameAr}
-                  onChange={(e) => setNewCategoryNameAr(e.target.value)}
-                  placeholder={t("categoryNameArabic")}
-                  className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+                  type="radio"
+                  name="categoryMode"
+                  checked={!isAddingNewCategory}
+                  onChange={() => handleCategoryModeChange("select")}
+                  className="w-4 h-4 text-champagne focus:ring-champagne/30"
                 />
+                <span className="text-sm text-charcoal">
+                  {t("selectExisting")}
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
-                  value={newCategoryNameEn}
-                  onChange={(e) => setNewCategoryNameEn(e.target.value)}
-                  placeholder={t("categoryNameEnglish")}
-                  className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+                  type="radio"
+                  name="categoryMode"
+                  checked={isAddingNewCategory}
+                  onChange={() => handleCategoryModeChange("new")}
+                  className="w-4 h-4 text-champagne focus:ring-champagne/30"
                 />
-              </div>
-              <button
-                type="button"
-                onClick={handleAddCategory}
-                className="text-sm font-medium border border-mist rounded-xl px-5 hover:bg-ivory transition-colors flex items-center gap-2"
+                <span className="text-sm text-charcoal">{t("addNew")}</span>
+              </label>
+            </div>
+
+            {!isAddingNewCategory ? (
+              <select
+                value={categoryId}
+                onChange={(e) => setCategoryId(e.target.value)}
+                className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
               >
-                <Plus className="w-4 h-4" />
-                {t("add")}
-              </button>
-            </label>
+                <option value="">—</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {tv(c.nameAr) || c.nameAr}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div>
+                <div className="flex gap-3 mb-2">
+                  <input
+                    value={newCategoryNameAr}
+                    onChange={(e) => setNewCategoryNameAr(e.target.value)}
+                    placeholder={t("categoryNameArabic")}
+                    className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+                  />
+                  <input
+                    value={newCategoryNameEn}
+                    onChange={(e) => setNewCategoryNameEn(e.target.value)}
+                    placeholder={t("categoryNameEnglish")}
+                    className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddCategory}
+                  className="text-sm font-medium border border-mist rounded-xl px-5 hover:bg-ivory transition-colors flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  {t("add")}
+                </button>
+              </div>
+            )}
           </div>
 
           <label className="block mb-5">

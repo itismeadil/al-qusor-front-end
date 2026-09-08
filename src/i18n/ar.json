@@ -87,5 +87,7 @@
   "translating": "جارٍ الترجمة…",
   "translateToEnglish": "ترجمة إلى الإنجليزية",
   "categoryNameArabic": "اسم الفئة بالعربية",
-  "categoryNameEnglish": "اسم الفئة بالإنجليزية"
+  "categoryNameEnglish": "اسم الفئة بالإنجليزية",
+  "selectExisting": "اختر من الموجود",
+  "addNew": "إضافة جديدة"
 }
