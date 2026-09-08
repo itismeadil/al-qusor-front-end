@@ -53,20 +53,28 @@ const ProductTable = ({ products, onDelete }) => {
                       {firstImage && (
                         <img
                           src={firstImage}
-                          alt={product.name}
+                          alt={
+                            lang === "ar"
+                              ? product.nameAr
+                              : product.nameEn || product.nameAr
+                          }
                           className="w-full h-full object-cover"
                         />
                       )}
                     </div>
                     <span className="font-medium text-noir text-base">
-                      {product.name}
+                      {lang === "ar"
+                        ? product.nameAr
+                        : product.nameEn || product.nameAr}
                     </span>
                   </div>
                 </td>
 
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center px-3 py-1 rounded-full bg-ivory/60 text-shadow/80 text-xs font-medium">
-                    {tv(product.category?.name) || "—"}
+                    {tv(product.category?.nameAr) ||
+                      product.category?.nameAr ||
+                      "—"}
                   </span>
                 </td>
 

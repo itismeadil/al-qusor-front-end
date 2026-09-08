@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
 import { useLanguage } from "../context/LanguageContext";
+import { translateArToEn } from "../utils/translate";
 import {
   SaudiRiyal,
   Plus,
@@ -11,6 +12,7 @@ import {
   ArrowLeft,
   Printer,
   CheckCircle,
+  Languages,
 } from "lucide-react";
 
 let colorIdCounter = 0;
@@ -27,12 +29,16 @@ const AddProduct = () => {
 
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [newCategoryNameAr, setNewCategoryNameAr] = useState("");
+  const [newCategoryNameEn, setNewCategoryNameEn] = useState("");
+  const [nameAr, setNameAr] = useState("");
+  const [nameEn, setNameEn] = useState("");
+  const [descriptionAr, setDescriptionAr] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [price, setPrice] = useState("");
   const [colors, setColors] = useState([newColor()]);
   const [submitting, setSubmitting] = useState(false);
+  const [translating, setTranslating] = useState(false);
   const [error, setError] = useState("");
   const [createdProduct, setCreatedProduct] = useState(null);
 
@@ -43,18 +49,22 @@ const AddProduct = () => {
   }, []);
 
   const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) return;
+    if (!newCategoryNameAr.trim()) return;
     const { data } = await api.post("/categories", {
-      name: newCategoryName.trim(),
+      nameAr: newCategoryNameAr.trim(),
+      nameEn: newCategoryNameEn.trim(),
     });
     setCategories((prev) => {
       const exists = prev.find((c) => c._id === data._id);
       return exists
         ? prev
-        : [...prev, data].sort((a, b) => a.name.localeCompare(b.name));
+        : [...prev, data].sort((a, b) =>
+            (a.nameAr || a.name || "").localeCompare(b.nameAr || b.name || ""),
+          );
     });
     setCategoryId(data._id);
-    setNewCategoryName("");
+    setNewCategoryNameAr("");
+    setNewCategoryNameEn("");
   };
 
   const updateColor = (key, patch) => {
@@ -98,11 +108,37 @@ const AddProduct = () => {
   const removeColorRow = (key) =>
     setColors((prev) => prev.filter((c) => c.key !== key));
 
+  const handleTranslate = async () => {
+    if (!nameAr.trim()) {
+      setError(t("errorArabicNameRequired"));
+      return;
+    }
+    setTranslating(true);
+    setError("");
+    try {
+      const translatedName = await translateArToEn(nameAr);
+      setNameEn(translatedName);
+
+      if (descriptionAr.trim()) {
+        const translatedDesc = await translateArToEn(descriptionAr);
+        setDescriptionEn(translatedDesc);
+      }
+    } catch (err) {
+      setError(t("errorTranslation"));
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!categoryId) {
       setError(t("errorSelectCategory"));
+      return;
+    }
+    if (!nameAr.trim()) {
+      setError(t("errorArabicNameRequired"));
       return;
     }
     setSubmitting(true);
@@ -123,9 +159,11 @@ const AddProduct = () => {
       }
 
       const { data: product } = await api.post("/products", {
-        name,
+        nameAr,
+        nameEn,
         category: categoryId,
-        description,
+        descriptionAr,
+        descriptionEn,
         price: Number(price),
         colors: uploadedColors,
       });
@@ -145,7 +183,7 @@ const AddProduct = () => {
         <head><title>${createdProduct.name} — QR</title></head>
         <body style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;">
           <img src="${createdProduct.qrCodeUrl}" style="width:300px;height:300px;" />
-          <p style="margin-top:12px;font-size:14px;">${createdProduct.name}</p>
+          <p style="margin-top:12px;font-size:14px;">${createdProduct.nameAr}</p>
         </body>
       </html>
     `);
@@ -156,8 +194,10 @@ const AddProduct = () => {
 
   const resetForm = () => {
     setCreatedProduct(null);
-    setName("");
-    setDescription("");
+    setNameAr("");
+    setNameEn("");
+    setDescriptionAr("");
+    setDescriptionEn("");
     setPrice("");
     setCategoryId("");
     setColors([newColor()]);
@@ -176,7 +216,7 @@ const AddProduct = () => {
               {t("productAdded")}
             </p>
             <h1 className="font-display text-3xl text-noir mb-8">
-              {createdProduct.name}
+              {createdProduct.nameAr}
             </h1>
             <div className="relative inline-block mb-6">
               <img
@@ -247,36 +287,49 @@ const AddProduct = () => {
               <option value="">—</option>
               {categories.map((c) => (
                 <option key={c._id} value={c._id}>
-                  {tv(c.name)}
+                  {tv(c.nameAr) || c.nameAr}
                 </option>
               ))}
             </select>
           </label>
 
-          <div className="flex gap-3 mb-6">
-            <input
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder={t("newCategory")}
-              className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
-            />
-            <button
-              type="button"
-              onClick={handleAddCategory}
-              className="text-sm font-medium border border-mist rounded-xl px-5 hover:bg-ivory transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              {t("add")}
-            </button>
+          <div className="mb-6">
+            <label className="block mb-2">
+              <span className="block text-xs font-medium text-charcoal/70 mb-2">
+                {t("newCategory")} (العربية)
+              </span>
+              <div className="flex gap-3 mb-2">
+                <input
+                  value={newCategoryNameAr}
+                  onChange={(e) => setNewCategoryNameAr(e.target.value)}
+                  placeholder={t("categoryNameArabic")}
+                  className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+                />
+                <input
+                  value={newCategoryNameEn}
+                  onChange={(e) => setNewCategoryNameEn(e.target.value)}
+                  placeholder={t("categoryNameEnglish")}
+                  className="flex-1 rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleAddCategory}
+                className="text-sm font-medium border border-mist rounded-xl px-5 hover:bg-ivory transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                {t("add")}
+              </button>
+            </label>
           </div>
 
           <label className="block mb-5">
             <span className="block text-xs font-medium text-charcoal/70 mb-2">
-              {t("productName")}
+              {t("productName")} (العربية) *
             </span>
             <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={nameAr}
+              onChange={(e) => setNameAr(e.target.value)}
               required
               className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
             />
@@ -284,15 +337,48 @@ const AddProduct = () => {
 
           <label className="block mb-5">
             <span className="block text-xs font-medium text-charcoal/70 mb-2">
-              {t("description")}
+              {t("productName")} (English)
+            </span>
+            <input
+              value={nameEn}
+              onChange={(e) => setNameEn(e.target.value)}
+              className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+            />
+          </label>
+
+          <label className="block mb-5">
+            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+              {t("description")} (العربية)
             </span>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={descriptionAr}
+              onChange={(e) => setDescriptionAr(e.target.value)}
               rows={3}
               className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
             />
           </label>
+
+          <label className="block mb-5">
+            <span className="block text-xs font-medium text-charcoal/70 mb-2">
+              {t("description")} (English)
+            </span>
+            <textarea
+              value={descriptionEn}
+              onChange={(e) => setDescriptionEn(e.target.value)}
+              rows={3}
+              className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+            />
+          </label>
+
+          <button
+            type="button"
+            onClick={handleTranslate}
+            disabled={translating || !nameAr.trim()}
+            className="w-full mb-6 text-sm font-medium border border-champagne text-champagne rounded-xl py-3 hover:bg-champagne hover:text-pearl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <Languages className="w-4 h-4" />
+            {translating ? t("translating") : t("translateToEnglish")}
+          </button>
 
           <label className="block mb-6">
             <span className="block text-xs font-medium text-charcoal/70 mb-2">

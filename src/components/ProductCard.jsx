@@ -63,7 +63,9 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
         {images[activeImage] && (
           <img
             src={images[activeImage]}
-            alt={product.name}
+            alt={
+              lang === "ar" ? product.nameAr : product.nameEn || product.nameAr
+            }
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         )}
@@ -136,10 +138,10 @@ const ProductCard = ({ product, tv, lang, aspectRatio = "aspect-[4/5]" }) => {
       </div>
       <div className="p-3 md:p-5">
         <p className="text-[10px] md:text-[11px] tracking-[0.15em] uppercase text-champagne/70 mb-1 md:mb-2">
-          {tv(product.category?.name)}
+          {tv(product.category?.nameAr) || product.category?.nameAr}
         </p>
         <p className="font-display text-sm md:text-lg text-noir mb-1 md:mb-2 leading-tight">
-          {product.name}
+          {lang === "ar" ? product.nameAr : product.nameEn || product.nameAr}
         </p>
         <p className="text-xs md:text-sm text-charcoal font-medium">
           <span className="flex items-center">

@@ -111,8 +111,10 @@ const PublicProduct = () => {
 
   const fileNameFor = (index) => {
     const img = allImages[index];
+    const productName =
+      lang === "ar" ? product?.nameAr : product?.nameEn || product?.nameAr;
     const productSlug =
-      product?.name?.replace(/\s+/g, "-").toLowerCase() || "product";
+      productName?.replace(/\s+/g, "-").toLowerCase() || "product";
     const colorSlug =
       img?.colorName?.replace(/\s+/g, "-").toLowerCase() || "photo";
     return `${productSlug}-${colorSlug}-${index + 1}.jpg`;
@@ -128,8 +130,13 @@ const PublicProduct = () => {
       <Navbar />
       {!notFound && !loading && product && (
         <StructuredData
-          productName={product.name}
-          productDescription={product.description || t("heroSubtitle")}
+          productName={
+            lang === "ar" ? product.nameAr : product.nameEn || product.nameAr
+          }
+          productDescription={
+            (lang === "ar" ? product.descriptionAr : product.descriptionEn) ||
+            t("heroSubtitle")
+          }
           productImage={allImages[0]?.url || ""}
           productPrice={product.price}
           productUrl={typeof window !== "undefined" ? window.location.href : ""}
@@ -150,10 +157,14 @@ const PublicProduct = () => {
                 {t("home")}
               </Link>
               <span>/</span>
-              <span>{tv(product.category?.name)}</span>
+              <span>
+                {tv(product.category?.nameAr) || product.category?.nameAr}
+              </span>
               <span>/</span>
               <span className="text-noir font-medium truncate max-w-[160px]">
-                {product.name}
+                {lang === "ar"
+                  ? product.nameAr
+                  : product.nameEn || product.nameAr}
               </span>
             </nav>
 
@@ -177,7 +188,11 @@ const PublicProduct = () => {
                         <img
                           key={i}
                           src={img.url}
-                          alt={product.name}
+                          alt={
+                            lang === "ar"
+                              ? product.nameAr
+                              : product.nameEn || product.nameAr
+                          }
                           className="w-full h-full object-cover shrink-0"
                         />
                       ))}
@@ -307,10 +322,12 @@ const PublicProduct = () => {
 
               <div className="flex flex-col justify-center">
                 <p className="text-[11px] tracking-[0.2em] uppercase text-champagne/70 mb-3">
-                  {tv(product.category?.name)}
+                  {tv(product.category?.nameAr) || product.category?.nameAr}
                 </p>
                 <h1 className="font-display text-4xl md:text-5xl text-noir mb-4 leading-tight">
-                  {product.name}
+                  {lang === "ar"
+                    ? product.nameAr
+                    : product.nameEn || product.nameAr}
                 </h1>
                 <p className="text-3xl text-charcoal font-semibold mb-8 flex items-center gap-2">
                   {product.price}
@@ -340,13 +357,15 @@ const PublicProduct = () => {
                   </div>
                 )}
 
-                {product.description && (
+                {(product.descriptionAr || product.descriptionEn) && (
                   <div>
                     <p className="text-xs font-medium text-charcoal/70 mb-2">
                       {t("description")}
                     </p>
                     <p className="text-sm text-charcoal leading-relaxed">
-                      {product.description}
+                      {lang === "ar"
+                        ? product.descriptionAr || product.descriptionEn
+                        : product.descriptionEn || product.descriptionAr}
                     </p>
                   </div>
                 )}

@@ -81,5 +81,11 @@
   "privacyPolicy": "سياسة الخصوصية",
   "termsOfService": "شروط الخدمة",
   "searchPlaceholder": "ابحث عن المنتجات...",
-  "allColors": "جميع الألوان"
+  "allColors": "جميع الألوان",
+  "errorArabicNameRequired": "الاسم بالعربية مطلوب",
+  "errorTranslation": "تعذر الترجمة. حاول مرة أخرى.",
+  "translating": "جارٍ الترجمة…",
+  "translateToEnglish": "ترجمة إلى الإنجليزية",
+  "categoryNameArabic": "اسم الفئة بالعربية",
+  "categoryNameEnglish": "اسم الفئة بالإنجليزية"
 }

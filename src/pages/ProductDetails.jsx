@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import ConfirmationModal from "../components/ConfirmationModal";
 import NotFound from "./NotFound";
 import { useLanguage } from "../context/LanguageContext";
+import { translateArToEn } from "../utils/translate";
 import {
   SaudiRiyal,
   ArrowLeft,
@@ -14,6 +15,7 @@ import {
   QrCode,
   Upload,
   X,
+  Languages,
 } from "lucide-react";
 
 const ProductDetails = () => {
@@ -23,8 +25,10 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
-    name: "",
-    description: "",
+    nameAr: "",
+    nameEn: "",
+    descriptionAr: "",
+    descriptionEn: "",
     price: "",
     category: "",
     colors: [],
@@ -32,6 +36,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [translating, setTranslating] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false });
   const [newImages, setNewImages] = useState({});
 
@@ -45,8 +50,10 @@ const ProductDetails = () => {
         setProduct(p);
         setCategories(cats);
         setForm({
-          name: p.name || "",
-          description: p.description || "",
+          nameAr: p.nameAr || "",
+          nameEn: p.nameEn || "",
+          descriptionAr: p.descriptionAr || "",
+          descriptionEn: p.descriptionEn || "",
           price: p.price ?? "",
           category: p.category?._id || "",
           colors: p.colors || [],
@@ -93,6 +100,26 @@ const ProductDetails = () => {
           : c,
       ),
     }));
+  };
+
+  const handleTranslate = async () => {
+    if (!form.nameAr.trim()) {
+      return;
+    }
+    setTranslating(true);
+    try {
+      const translatedName = await translateArToEn(form.nameAr);
+      setForm((prev) => ({ ...prev, nameEn: translatedName }));
+
+      if (form.descriptionAr.trim()) {
+        const translatedDesc = await translateArToEn(form.descriptionAr);
+        setForm((prev) => ({ ...prev, descriptionEn: translatedDesc }));
+      }
+    } catch (err) {
+      console.error("Translation error:", err);
+    } finally {
+      setTranslating(false);
+    }
   };
 
   const handleSave = async (e) => {
@@ -179,7 +206,7 @@ const ProductDetails = () => {
               >
                 {categories.map((c) => (
                   <option key={c._id} value={c._id}>
-                    {tv(c.name)}
+                    {tv(c.nameAr) || c.nameAr}
                   </option>
                 ))}
               </select>
@@ -187,28 +214,63 @@ const ProductDetails = () => {
 
             <label className="block mb-5">
               <span className="block text-xs font-medium text-charcoal/70 mb-2">
-                {t("productName")}
+                {t("productName")} (العربية) *
               </span>
               <input
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                value={form.nameAr}
+                onChange={(e) => setForm({ ...form, nameAr: e.target.value })}
                 className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
               />
             </label>
 
             <label className="block mb-5">
               <span className="block text-xs font-medium text-charcoal/70 mb-2">
-                {t("description")}
+                {t("productName")} (English)
+              </span>
+              <input
+                value={form.nameEn}
+                onChange={(e) => setForm({ ...form, nameEn: e.target.value })}
+                className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+              />
+            </label>
+
+            <label className="block mb-5">
+              <span className="block text-xs font-medium text-charcoal/70 mb-2">
+                {t("description")} (العربية)
               </span>
               <textarea
-                value={form.description}
+                value={form.descriptionAr}
                 onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
+                  setForm({ ...form, descriptionAr: e.target.value })
                 }
                 rows={4}
                 className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
               />
             </label>
+
+            <label className="block mb-5">
+              <span className="block text-xs font-medium text-charcoal/70 mb-2">
+                {t("description")} (English)
+              </span>
+              <textarea
+                value={form.descriptionEn}
+                onChange={(e) =>
+                  setForm({ ...form, descriptionEn: e.target.value })
+                }
+                rows={4}
+                className="w-full rounded-xl border border-mist px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50 transition-all bg-ivory/30"
+              />
+            </label>
+
+            <button
+              type="button"
+              onClick={handleTranslate}
+              disabled={translating || !form.nameAr.trim()}
+              className="w-full mb-6 text-sm font-medium border border-champagne text-champagne rounded-xl py-3 hover:bg-champagne hover:text-pearl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <Languages className="w-4 h-4" />
+              {translating ? t("translating") : t("translateToEnglish")}
+            </button>
 
             <label className="block mb-6">
               <span className="block text-xs font-medium text-charcoal/70 mb-2">
